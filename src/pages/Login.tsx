@@ -21,8 +21,8 @@ const Login: React.FC = () => {
     // Em um caso real, você faria uma chamada à API aqui
     console.log('Login realizado com:', { email, password });
     
-    // Redirecionar para a página inicial após login
-    history.push('/');
+    // Redirecionar para o questionário após login
+    history.push('/quiz');
   };
 
   return (
