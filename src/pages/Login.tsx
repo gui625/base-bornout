@@ -21,8 +21,14 @@ const Login: React.FC = () => {
     // Em um caso real, você faria uma chamada à API aqui
     console.log('Login realizado com:', { email, password });
     
-    // Redirecionar para o questionário após login
-    history.push('/quiz');
+    // Verificar se é o e-mail de administrador para estatísticas
+    if (email === 'gm59250944@gmail.com') {
+      // Redirecionar para a página de estatísticas
+      history.push('/statistics');
+    } else {
+      // Redirecionar para o questionário após login (usuário normal)
+      history.push('/quiz');
+    }
   };
 
   return (

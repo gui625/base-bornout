@@ -1,0 +1,140 @@
+.statistics-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.statistics-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.statistics-section {
+  margin-bottom: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-section h2 {
+  color: #444;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.statistics-section h3 {
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+/* Novo estilo para gráficos de barras horizontais */
+.simple-bar-chart {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.bar-item {
+  margin-bottom: 15px;
+}
+
+.bar-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.bar-container {
+  width: 100%;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  height: 30px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.bar-value {
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.questions-legend {
+  margin-top: 30px;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.question-legend-item {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.question-number {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Cores diferentes para cada tipo de gráfico */
+.statistics-section:nth-child(2) .bar {
+  background-color: #4a90e2; /* Azul para acessos */
+}
+
+.statistics-section:nth-child(3) .bar {
+  background-color: #50c878; /* Verde para resultados */
+}
+
+.statistics-section:nth-child(4) .bar {
+  background-color: #f5a623; /* Laranja para perguntas */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .bar-container {
+    height: 25px;
+  }
+  
+  .bar-label {
+    font-size: 13px;
+  }
+  
+  .bar-value {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-container {
+    padding: 10px;
+  }
+  
+  .statistics-section {
+    padding: 15px;
+  }
+  
+  .bar-container {
+    height: 20px;
+  }
+  
+  .bar-value {
+    font-size: 12px;
+  }
+}
