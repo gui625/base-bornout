@@ -1,78 +1,81 @@
+/* Login moderno inspirado em bma.org.uk e greator.com */
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f7fb;
-  padding: 20px;
+  background: linear-gradient(180deg, #f7f9fc 0%, var(--bg-soft) 100%);
+  padding: 24px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  padding: 30px;
+  max-width: 440px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 32px;
 }
 
 .login-card h2 {
   margin: 0 0 6px 0;
-  font-size: 24px;
-  color: #2c3e50;
+  font-size: 26px;
+  color: var(--text-strong);
 }
 
 .login-subtitle {
-  margin-bottom: 20px;
-  color: #7f8c8d;
+  margin-bottom: 22px;
+  color: var(--text-muted);
 }
 
-.form-group {
-  margin-bottom: 16px;
-}
-
+.form-group { margin-bottom: 16px; }
 .form-group label {
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #34495e;
+  color: var(--text-strong);
 }
-
 .form-group input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #dce1e6;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-group input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(37,99,201,0.15);
 }
 
 .error-message {
   background: #fdecea;
   color: #c0392b;
   border: 1px solid #f5c6cb;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
   margin-bottom: 12px;
 }
 
 .login-button {
   width: 100%;
-  background: #4a90e2;
+  background: var(--brand-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
-
 .login-button:hover {
-  background: #3a7bc8;
+  background: var(--brand-primary-600);
+  box-shadow: 0 6px 18px rgba(37,99,201,0.22);
 }
 
 .login-help {
   margin-top: 12px;
   text-align: center;
-  color: #95a5a6;
+  color: var(--text-muted);
 }

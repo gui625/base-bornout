@@ -1,76 +1,66 @@
+/* Estatísticas com visual claro, cards e mesa responsiva */
 .stats-container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 40px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 24px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 .stats-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .logout-button {
   background: #e74c3c;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
-
-.logout-button:hover {
-  background: #c0392b;
-}
+.logout-button:hover { background: #c0392b; box-shadow: 0 8px 20px rgba(231,76,60,0.24); }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 22px;
 }
 
 .card {
   background: #f8fafc;
-  border: 1px solid #e5e9f2;
-  border-radius: 8px;
-  padding: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 18px;
   text-align: center;
 }
 
-.big {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 6px;
-}
-
+.big { font-size: 28px; font-weight: 700; margin-top: 6px; }
 .big.danger { color: #e74c3c; }
 .big.warning { color: #f1c40f; }
 .big.safe { color: #2ecc71; }
 
-.table-wrapper {
-  overflow-x: auto;
-}
-
-.table-wrapper table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+.table-wrapper { overflow-x: auto; }
+.table-wrapper table { width: 100%; border-collapse: collapse; }
 .table-wrapper th, .table-wrapper td {
-  padding: 10px;
-  border: 1px solid #e5e9f2;
+  padding: 12px 10px;
+  border: 1px solid var(--border-soft);
   text-align: left;
 }
+.table-wrapper thead th { background: #f3f5f9; color: var(--text-strong); }
 
 .no-data {
   background: #f8f8f8;
   border: 1px dashed #ddd;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 16px;
-  color: #777;
+  color: var(--text-muted);
+  text-align: center;
 }
