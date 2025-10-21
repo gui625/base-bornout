@@ -29,7 +29,7 @@ const App: React.FC = () => {
       <div>
         <Header />
         <Switch>
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact render={() => <Redirect to="/login" />} />
           <Route path="/quiz" component={BurnoutQuiz} />
           <Route path="/results" component={Results} />
           <Route path="/chatbot" component={Chatbot} />
