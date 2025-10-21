@@ -11,6 +11,16 @@ const Results: React.FC = () => {
   const history = useHistory();
   const score = location.state?.score ?? 0;
 
+  // Persistir resultado para estatísticas
+  try {
+    const raw = localStorage.getItem('burnoutResults');
+    const list = raw ? JSON.parse(raw) : [];
+    list.push({ score, timestamp: new Date().toISOString() });
+    localStorage.setItem('burnoutResults', JSON.stringify(list));
+  } catch (e) {
+    // falha silenciosa
+  }
+
   const renderMessage = () => {
     if (score > 15) {
       return "Recomendação: Procure um médico ou psicólogo. Seus sintomas indicam alto risco de burnout.";

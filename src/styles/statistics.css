@@ -1,0 +1,76 @@
+.stats-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.stats-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #c0392b;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #f8fafc;
+  border: 1px solid #e5e9f2;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.big {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.big.danger { color: #e74c3c; }
+.big.warning { color: #f1c40f; }
+.big.safe { color: #2ecc71; }
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrapper th, .table-wrapper td {
+  padding: 10px;
+  border: 1px solid #e5e9f2;
+  text-align: left;
+}
+
+.no-data {
+  background: #f8f8f8;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  color: #777;
+}
