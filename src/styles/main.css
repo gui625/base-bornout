@@ -36,7 +36,7 @@ body {
   display: inline-block;
   font-size: 16px;
   color: #ffffff;
-  background: #28a745;
+  background: #9aa0a6; /* cinza neutro */
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -44,21 +44,28 @@ body {
 }
 
 .button:hover {
-  background: #218838;
+  background: #8b9097; /* cinza levemente mais escuro no hover */
 }
 
+/* Estado selecionado ou clicado: azul */
+.button.selected,
+.button.clicked {
+  background: #2563c9;
+}
+
+/* Remover diferenciação por tipo (Sim/Não) para cor fixa neutra */
 .button.sim-btn.selected,
 .button.sim-btn.clicked {
   background: #2563c9;
 }
 
 .button.nao-btn {
-  background: #e53935;
+  background: #9aa0a6;
 }
 
 .button.nao-btn.selected,
 .button.nao-btn.clicked {
-  background: #b71c1c;
+  background: #2563c9;
 }
 
 .button.clicked {
