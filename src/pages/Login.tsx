@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../styles/login.css';
 
-const VALID_USERNAME = 'gm59250944@gmail.com';
-const VALID_PASSWORD = 'gui123';
+const ADMIN_EMAIL = 'gm59250944@gmail.com';
+const ADMIN_PASSWORD = 'gui123';
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -13,16 +13,26 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+    if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('authUser', JSON.stringify({ username }));
+      localStorage.setItem('authRole', 'admin');
       setError(null);
       history.push('/statistics');
     } else {
+      // Usuário normal: autentica e decide para onde vai conforme perfil
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('authUser', JSON.stringify({ username }));
+      localStorage.setItem('authRole', 'user');
       setError(null);
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('authUser');
-      history.push('/quiz');
+
+      const completedKey = `userProfileCompleted:${username}`;
+      const alreadyCompleted = localStorage.getItem(completedKey) === 'true';
+      if (alreadyCompleted) {
+        history.push('/quiz');
+      } else {
+        history.push('/profile-setup');
+      }
     }
   };
 
@@ -30,7 +40,7 @@ const Login: React.FC = () => {
     <div className="login-container">
       <div className="login-card">
         <h2>Login</h2>
-        <p className="login-subtitle">Acesse as estatísticas do app</p>
+        <p className="login-subtitle">Acesse o app</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">E-mail</label>
@@ -58,7 +68,7 @@ const Login: React.FC = () => {
           <button type="submit" className="login-button">Entrar</button>
         </form>
         <div className="login-help">
-          <small>E-mail: <strong>{VALID_USERNAME}</strong> | Senha: <strong>{VALID_PASSWORD}</strong></small>
+          <small>Admin: <strong>{ADMIN_EMAIL}</strong> | Senha: <strong>{ADMIN_PASSWORD}</strong></small>
         </div>
       </div>
     </div>
