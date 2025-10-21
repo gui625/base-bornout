@@ -5,6 +5,7 @@ import Results from './pages/Results';
 import Header from './components/Header';
 import BurnoutQuiz from './components/BurnoutQuiz';
 import Chatbot from './pages/Chatbot';
+import FinalScreen from './pages/FinalScreen';
 import './styles/main.css';
 
 const App: React.FC = () => {
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/quiz" component={BurnoutQuiz} />
           <Route path="/results" component={Results} />
           <Route path="/chatbot" component={Chatbot} />
+          <Route path="/final" component={FinalScreen} />
         </Switch>
       </div>
     </Router>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import '../styles/chatbot.css';
 
 interface Message {
@@ -19,6 +20,7 @@ interface ConversationContext {
 }
 
 const Chatbot: React.FC = () => {
+  const history = useHistory();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -30,6 +32,10 @@ const Chatbot: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const handleFinishChat = () => {
+    history.push('/final');
+  };
   
   // Estado para manter o contexto da conversa
   const [context, setContext] = useState<ConversationContext>({
@@ -244,6 +250,7 @@ const Chatbot: React.FC = () => {
       <div className="chatbot-header">
         <h1>Assistente Virtual de Burnout</h1>
         <p>Tire suas dúvidas sobre burnout e saúde mental</p>
+        <button className="finish-button" onClick={handleFinishChat}>Finalizar Atendimento</button>
       </div>
       
       <div className="chatbot-messages">
