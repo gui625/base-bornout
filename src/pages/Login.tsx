@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../styles/login.css';
 
-const VALID_USERNAME = 'admin';
-const VALID_PASSWORD = 'burnout123';
+const VALID_USERNAME = 'gm59250944@gmail.com';
+const VALID_PASSWORD = 'gui123';
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -19,9 +19,10 @@ const Login: React.FC = () => {
       setError(null);
       history.push('/statistics');
     } else {
-      setError('Usuário ou senha inválidos.');
+      setError(null);
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('authUser');
+      history.push('/quiz');
     }
   };
 
@@ -32,13 +33,13 @@ const Login: React.FC = () => {
         <p className="login-subtitle">Acesse as estatísticas do app</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Usuário</label>
+            <label htmlFor="username">E-mail</label>
             <input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Digite seu usuário"
+              placeholder="Digite seu e-mail"
               required
             />
           </div>
@@ -57,7 +58,7 @@ const Login: React.FC = () => {
           <button type="submit" className="login-button">Entrar</button>
         </form>
         <div className="login-help">
-          <small>Usuário: <strong>{VALID_USERNAME}</strong> | Senha: <strong>{VALID_PASSWORD}</strong></small>
+          <small>E-mail: <strong>{VALID_USERNAME}</strong> | Senha: <strong>{VALID_PASSWORD}</strong></small>
         </div>
       </div>
     </div>
