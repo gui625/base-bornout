@@ -1,5 +1,6 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
+import '../styles/results.css';
 
 interface LocationState {
   score: number;
@@ -7,6 +8,7 @@ interface LocationState {
 
 const Results: React.FC = () => {
   const location = useLocation<LocationState>();
+  const history = useHistory();
   const score = location.state?.score ?? 0;
 
   const renderMessage = () => {
@@ -19,11 +21,22 @@ const Results: React.FC = () => {
     }
   };
 
+  const handleChatbotRedirect = () => {
+    history.push('/chatbot');
+  };
+
   return (
     <div className="results-container">
       <h2>Resultado</h2>
       <p>Respostas positivas: {score}</p>
       <p className="recommendation">{renderMessage()}</p>
+      
+      <div className="chatbot-redirect">
+        <p>Tem dúvidas sobre burnout ou saúde mental?</p>
+        <button onClick={handleChatbotRedirect} className="chatbot-button">
+          Converse com nosso Assistente Virtual
+        </button>
+      </div>
     </div>
   );
 };
