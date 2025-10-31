@@ -9,6 +9,7 @@ const ProfileSetup: React.FC = () => {
   const [idade, setIdade] = useState<number | ''>('');
   const [profissao, setProfissao] = useState('');
   const [tempoTrabalho, setTempoTrabalho] = useState<number | ''>('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -27,6 +28,17 @@ const ProfileSetup: React.FC = () => {
     } catch (e) {}
   }, []);
 
+  const handlePreSubmit = () => {
+    const isEmptyNome = (nome || '').trim() === '';
+    const isEmptyIdade = !idade || Number(idade) === 0;
+    const isEmptyProfissao = (profissao || '').trim() === '';
+    const isEmptyTempo = !tempoTrabalho || Number(tempoTrabalho) === 0;
+    if (isEmptyNome && isEmptyIdade && isEmptyProfissao && isEmptyTempo) {
+      setError('Por favor, preencha os campos antes de enviar.');
+    } else {
+      setError(null);
+    }
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
@@ -61,7 +73,8 @@ const ProfileSetup: React.FC = () => {
             <label htmlFor="tempo">Tempo diário de trabalho (horas)</label>
             <input id="tempo" type="number" value={tempoTrabalho} onChange={(e) => setTempoTrabalho(Number(e.target.value))} placeholder="Horas por dia" required />
           </div>
-          <button type="submit" className="save-button">Salvar e continuar</button>
+          {error && <div className="error-message">{error}</div>}
+          <button type="submit" className="save-button" onClick={handlePreSubmit}>Salvar e continuar</button>
         </form>
       </div>
     </div>

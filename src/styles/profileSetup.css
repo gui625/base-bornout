@@ -60,3 +60,12 @@
   background: var(--brand-primary-600);
   box-shadow: 0 6px 18px rgba(37,99,201,0.22);
 }
+
+.error-message {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5c6cb;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
