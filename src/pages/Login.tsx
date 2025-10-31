@@ -11,6 +11,15 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // Exibe uma mensagem de erro se tentar enviar sem preencher nada
+  const handlePreSubmit = () => {
+    if (username.trim() === '' && password.trim() === '') {
+      setError('Por favor, preencha e-mail e senha antes de enviar.');
+    } else {
+      setError(null);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
@@ -65,7 +74,7 @@ const Login: React.FC = () => {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="login-button">Entrar</button>
+          <button type="submit" className="login-button" onClick={handlePreSubmit}>Entrar</button>
         </form>
         <div className="login-help">
           <small>Admin: <strong>{ADMIN_EMAIL}</strong> | Senha: <strong>{ADMIN_PASSWORD}</strong></small>
