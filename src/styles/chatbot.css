@@ -1,28 +1,42 @@
+/* ========================================
+   ESTILOS DA INTERFACE DO CHATBOT
+   ========================================
+   Interface de chat moderna com layout flexível
+   Design inspirado em aplicativos de mensagem populares
+*/
+
+/* Container principal do chatbot - layout full-height */
 .chatbot-container {
-  max-width: 800px;
-  margin: 0 auto;
-  height: 100vh;
+  max-width: 800px;           /* Largura máxima para desktop */
+  margin: 0 auto;             /* Centralização horizontal */
+  height: 100vh;              /* Altura total da viewport */
   display: flex;
-  flex-direction: column;
-  background-color: #f5f5f5;
+  flex-direction: column;     /* Layout vertical: header, messages, input */
+  background-color: #f5f5f5;  /* Fundo cinza claro */
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: hidden;           /* Evita scroll no container principal */
 }
 
+/* ========================================
+   HEADER DO CHATBOT
+   ======================================== */
+
+/* Cabeçalho do chatbot - informações e controles */
 .chatbot-header {
-  background-color: #4a90e2;
+  background-color: #4a90e2;  /* Azul característico do chatbot */
   color: white;
   padding: 20px;
   text-align: center;
-  position: relative;
+  position: relative;         /* Para posicionamento absoluto do botão */
 }
 
+/* Botão de finalizar chat - posicionado no canto superior direito */
 .finish-button {
   position: absolute;
   right: 20px;
   top: 20px;
-  background-color: #e74c3c;
+  background-color: #e74c3c;  /* Vermelho para ação de saída */
   color: white;
   border: none;
   padding: 8px 15px;
@@ -32,120 +46,158 @@
   transition: background-color 0.3s;
 }
 
+/* Estado hover do botão de finalizar */
 .finish-button:hover {
-  background-color: #c0392b;
+  background-color: #c0392b;  /* Vermelho mais escuro */
 }
 
+/* Título do chatbot */
 .chatbot-header h1 {
   margin: 0;
   font-size: 24px;
 }
 
+/* Subtítulo/descrição do chatbot */
 .chatbot-header p {
   margin: 5px 0 0;
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.8;               /* Transparência para hierarquia visual */
 }
 
+/* ========================================
+   ÁREA DE MENSAGENS
+   ======================================== */
+
+/* Container das mensagens - área scrollável principal */
 .chatbot-messages {
-  flex: 1;
+  flex: 1;                    /* Ocupa todo o espaço disponível */
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: auto;           /* Scroll vertical quando necessário */
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 15px;                  /* Espaçamento entre mensagens */
 }
 
+/* ========================================
+   ESTRUTURA DAS MENSAGENS
+   ======================================== */
+
+/* Container individual de cada mensagem */
 .message {
   display: flex;
   margin-bottom: 10px;
 }
 
+/* Mensagens do usuário - alinhadas à direita */
 .user-message {
   justify-content: flex-end;
 }
 
+/* Mensagens do bot - alinhadas à esquerda */
 .bot-message {
   justify-content: flex-start;
 }
 
+/* Conteúdo da mensagem - bubble de chat */
 .message-content {
-  max-width: 70%;
+  max-width: 70%;             /* Máximo 70% da largura para evitar linhas muito longas */
   padding: 12px 16px;
-  border-radius: 18px;
+  border-radius: 18px;        /* Bordas arredondadas estilo bubble */
   position: relative;
 }
 
+/* Estilo específico para mensagens do usuário */
 .user-message .message-content {
-  background-color: #4a90e2;
+  background-color: #4a90e2;  /* Azul para mensagens do usuário */
   color: white;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px; /* Canto inferior direito menos arredondado */
 }
 
+/* Estilo específico para mensagens do bot */
 .bot-message .message-content {
-  background-color: #e9e9eb;
+  background-color: #e9e9eb;  /* Cinza claro para mensagens do bot */
   color: #333;
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;  /* Canto inferior esquerdo menos arredondado */
 }
 
+/* Texto dentro das mensagens */
 .message-content p {
   margin: 0;
-  word-wrap: break-word;
+  word-wrap: break-word;      /* Quebra palavras longas */
 }
 
+/* ========================================
+   TIMESTAMP DAS MENSAGENS
+   ======================================== */
+
+/* Horário da mensagem - pequeno e discreto */
 .message-time {
   font-size: 11px;
-  opacity: 0.7;
+  opacity: 0.7;               /* Transparência para ser discreto */
   display: block;
   margin-top: 5px;
   text-align: right;
 }
 
+/* Cor específica do timestamp para mensagens do usuário */
 .user-message .message-time {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* ========================================
+   ÁREA DE INPUT
+   ======================================== */
+
+/* Container do input - fixo na parte inferior */
 .chatbot-input {
   display: flex;
   padding: 15px;
   background-color: white;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #e0e0e0; /* Separador visual */
 }
 
+/* Campo de texto para digitação */
 .chatbot-input textarea {
-  flex: 1;
+  flex: 1;                    /* Ocupa todo o espaço disponível */
   border: 1px solid #ddd;
-  border-radius: 20px;
+  border-radius: 20px;        /* Bordas arredondadas */
   padding: 12px 15px;
-  resize: none;
-  height: 45px;
-  font-family: inherit;
+  resize: none;               /* Impede redimensionamento manual */
+  height: 45px;               /* Altura fixa */
+  font-family: inherit;       /* Herda fonte do parent */
   font-size: 14px;
-  outline: none;
+  outline: none;              /* Remove outline padrão */
 }
 
+/* Botão de enviar mensagem */
 .chatbot-input button {
   background-color: #4a90e2;
   color: white;
   border: none;
   border-radius: 20px;
   padding: 0 20px;
-  margin-left: 10px;
+  margin-left: 10px;          /* Espaço entre textarea e botão */
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s;
 }
 
+/* Estado hover do botão de enviar */
 .chatbot-input button:hover {
-  background-color: #3a7bc8;
+  background-color: #3a7bc8;  /* Azul mais escuro */
 }
 
+/* Estado desabilitado do botão */
 .chatbot-input button:disabled {
-  background-color: #cccccc;
+  background-color: #cccccc;  /* Cinza para indicar desabilitado */
   cursor: not-allowed;
 }
 
-/* Indicador de digitação */
+/* ========================================
+   INDICADOR DE DIGITAÇÃO
+   ======================================== */
+
+/* Container do indicador "bot está digitando" */
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -153,46 +205,55 @@
   padding: 5px 0;
 }
 
+/* Pontos animados do indicador de digitação */
 .typing-indicator span {
   height: 8px;
   width: 8px;
   background-color: #888;
-  border-radius: 50%;
+  border-radius: 50%;         /* Círculos perfeitos */
   display: inline-block;
-  margin: 0 2px;
+  margin: 0 2px;              /* Espaçamento entre pontos */
   opacity: 0.4;
   animation: typing 1.4s infinite both;
 }
 
+/* Delay da animação para o segundo ponto */
 .typing-indicator span:nth-child(2) {
   animation-delay: 0.2s;
 }
 
+/* Delay da animação para o terceiro ponto */
 .typing-indicator span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
+/* Animação de "pulsação" dos pontos */
 @keyframes typing {
   0% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* Move para cima */
   }
   100% {
-    transform: translateY(0);
+    transform: translateY(0);    /* Volta à posição original */
   }
 }
 
-/* Responsividade */
+/* ========================================
+   RESPONSIVIDADE MOBILE
+   ======================================== */
+
+/* Adaptações para telas menores (tablets e smartphones) */
 @media (max-width: 768px) {
   .chatbot-container {
     height: 100vh;
-    border-radius: 0;
-    max-width: 100%;
+    border-radius: 0;           /* Remove bordas arredondadas em mobile */
+    max-width: 100%;            /* Largura total da tela */
   }
   
+  /* Mensagens ocupam mais espaço em telas pequenas */
   .message-content {
-    max-width: 85%;
+    max-width: 85%;             /* Aumenta para 85% em mobile */
   }
 }

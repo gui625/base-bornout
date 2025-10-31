@@ -1,4 +1,11 @@
-/* Resultados com layout moderno e chamativo */
+/* ========================================
+   ESTILOS DA PÁGINA DE RESULTADOS
+   ========================================
+   Resultados com layout moderno e chamativo
+   Design centrado com destaque para recomendações
+*/
+
+/* Container principal dos resultados */
 .results-container {
   max-width: 900px;
   margin: 40px auto;
@@ -9,41 +16,50 @@
   text-align: center;
 }
 
+/* Título da página de resultados */
 .results-container h2 {
   color: var(--text-strong);
   margin-bottom: 18px;
   font-size: 28px;
 }
 
+/* Texto descritivo dos resultados */
 .results-container p {
   margin-bottom: 14px;
   font-size: 18px;
   color: var(--text-muted);
 }
 
+/* Card de recomendação - destaque visual para alertas */
 .recommendation {
   font-weight: 700;
   padding: 16px 18px;
-  background: linear-gradient(180deg, #fff5f5, #ffecec);
+  background: linear-gradient(180deg, #fff5f5, #ffecec); /* Gradiente rosa suave */
   border: 1px solid #ffd7d7;
   border-radius: var(--radius-sm);
   margin: 22px 0;
-  color: #c0392b;
+  color: #c0392b; /* Vermelho para alertas */
 }
 
+/* Seção de redirecionamento para o chatbot */
 .chatbot-redirect {
   margin-top: 32px;
   padding-top: 18px;
-  border-top: 1px solid var(--border-soft);
+  border-top: 1px solid var(--border-soft); /* Separador visual */
 }
 
-.chatbot-redirect p { font-size: 16px; color: var(--text-muted); }
+/* Texto da seção do chatbot */
+.chatbot-redirect p { 
+  font-size: 16px; 
+  color: var(--text-muted); 
+}
 
+/* Botão para acessar o chatbot */
 .chatbot-button {
   background-color: var(--brand-primary);
   color: white;
   border: none;
-  border-radius: 28px;
+  border-radius: 28px; /* Bordas bem arredondadas */
   padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
@@ -51,16 +67,33 @@
   font-weight: 600;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Estados hover e active do botão do chatbot */
 .chatbot-button:hover {
   background-color: var(--brand-primary-600);
-  transform: translateY(-1px);
+  transform: translateY(-1px); /* Efeito de elevação */
   box-shadow: 0 8px 22px rgba(37,99,201,0.22);
 }
-.chatbot-button:active { transform: translateY(0); box-shadow: none; }
 
+.chatbot-button:active { 
+  transform: translateY(0); 
+  box-shadow: none; 
+}
+
+/* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
-  .results-container { padding: 24px; margin: 24px; }
-  .results-container h2 { font-size: 24px; }
-  .results-container p { font-size: 16px; }
-  .chatbot-button { padding: 10px 20px; font-size: 14px; }
+  .results-container { 
+    padding: 24px; 
+    margin: 24px; 
+  }
+  .results-container h2 { 
+    font-size: 24px; 
+  }
+  .results-container p { 
+    font-size: 16px; 
+  }
+  .chatbot-button { 
+    padding: 10px 20px; 
+    font-size: 14px; 
+  }
 }
