@@ -26,7 +26,6 @@ const Recommendation: React.FC<RecommendationProps> = ({ score }) => {
 
     // Renderização da interface de recomendação
     return (
-        {/* Container principal da seção de recomendação */}
         <div className="recommendation">
             {/* Título da seção de recomendação */}
             <h2>Recomendação</h2>
