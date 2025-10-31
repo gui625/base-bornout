@@ -58,9 +58,9 @@ const AdminRoute: React.FC<{ component: React.ComponentType<any>; path: string; 
 // Componente principal da aplicação - define estrutura e roteamento
 const App: React.FC = () => {
   return (
-    {/* Router principal que gerencia toda a navegação da aplicação */}
     <Router>
       <div>
+        {/* Router principal que gerencia toda a navegação da aplicação */}
         {/* Cabeçalho fixo presente em todas as páginas */}
         <Header />
         
