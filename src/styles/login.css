@@ -1,81 +1,126 @@
-/* Login moderno inspirado em bma.org.uk e greator.com */
+/* ========================================
+   ESTILOS DA PÁGINA DE LOGIN
+   ========================================
+   Login moderno inspirado em bma.org.uk e greator.com
+   Design centrado com card flutuante e gradiente de fundo
+*/
+
+/* Container principal da página de login - layout full-screen centrado */
 .login-container {
-  min-height: 100vh;
+  min-height: 100vh;          /* Altura mínima de toda a viewport */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;        /* Centralização vertical */
+  justify-content: center;    /* Centralização horizontal */
+  /* Gradiente de fundo consistente com o design system */
   background: linear-gradient(180deg, #f7f9fc 0%, var(--bg-soft) 100%);
-  padding: 24px;
+  padding: 24px;              /* Padding para evitar que o card toque as bordas em telas pequenas */
 }
 
+/* Card de login - container principal do formulário */
 .login-card {
   width: 100%;
-  max-width: 440px;
-  background: var(--bg-card);
+  max-width: 440px;           /* Largura máxima para manter proporções adequadas */
+  background: var(--bg-card); /* Fundo branco do card */
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: 32px;
+  box-shadow: var(--shadow-md); /* Sombra para criar elevação */
+  padding: 32px;              /* Espaçamento interno generoso */
 }
 
+/* Título principal do card de login */
 .login-card h2 {
   margin: 0 0 6px 0;
-  font-size: 26px;
-  color: var(--text-strong);
+  font-size: 26px;            /* Tamanho grande para hierarquia visual */
+  color: var(--text-strong);  /* Cor forte para destaque */
 }
 
+/* Subtítulo explicativo abaixo do título */
 .login-subtitle {
   margin-bottom: 22px;
-  color: var(--text-muted);
+  color: var(--text-muted);   /* Cor mais suave para texto secundário */
 }
 
-.form-group { margin-bottom: 16px; }
+/* ========================================
+   FORMULÁRIO DE LOGIN
+   ======================================== */
+
+/* Grupo de campo do formulário - espaçamento entre campos */
+.form-group { 
+  margin-bottom: 16px; 
+}
+
+/* Labels dos campos - tipografia consistente */
 .form-group label {
   display: block;
   margin-bottom: 6px;
-  font-weight: 600;
+  font-weight: 600;           /* Peso da fonte para destaque */
   color: var(--text-strong);
 }
+
+/* Inputs do formulário - design moderno com transições */
 .form-group input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 14px;         /* Padding generoso para facilitar interação */
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
-  font-size: 15px;
-  outline: none;
+  font-size: 15px;            /* Tamanho ligeiramente maior para melhor legibilidade */
+  outline: none;              /* Remove outline padrão do browser */
+  /* Transições suaves para mudanças de estado */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Estado de foco dos inputs - feedback visual claro */
 .form-group input:focus {
   border-color: var(--brand-primary);
+  /* Anel de foco azul translúcido para acessibilidade */
   box-shadow: 0 0 0 3px rgba(37,99,201,0.15);
 }
 
+/* ========================================
+   MENSAGENS DE ERRO
+   ======================================== */
+
+/* Container para mensagens de erro - design de alerta */
 .error-message {
-  background: #fdecea;
-  color: #c0392b;
-  border: 1px solid #f5c6cb;
+  background: #fdecea;        /* Fundo rosa claro para erro */
+  color: #c0392b;            /* Texto vermelho para erro */
+  border: 1px solid #f5c6cb; /* Borda rosa para definir o container */
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   margin-bottom: 12px;
 }
 
+/* ========================================
+   BOTÃO DE LOGIN
+   ======================================== */
+
+/* Botão principal de login - destaque visual */
 .login-button {
-  width: 100%;
+  width: 100%;                /* Largura total para facilitar clique */
   background: var(--brand-primary);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
   padding: 12px 16px;
-  font-weight: 600;
-  cursor: pointer;
+  font-weight: 600;           /* Peso da fonte para destaque */
+  cursor: pointer;            /* Cursor de pointer para indicar interatividade */
+  /* Transições suaves para estados hover */
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Estado hover do botão - feedback visual */
 .login-button:hover {
-  background: var(--brand-primary-600);
+  background: var(--brand-primary-600); /* Cor mais escura no hover */
+  /* Sombra mais pronunciada para efeito de elevação */
   box-shadow: 0 6px 18px rgba(37,99,201,0.22);
 }
 
+/* ========================================
+   ELEMENTOS DE AJUDA
+   ======================================== */
+
+/* Texto de ajuda abaixo do formulário */
 .login-help {
   margin-top: 12px;
-  text-align: center;
-  color: var(--text-muted);
+  text-align: center;         /* Centralização do texto */
+  color: var(--text-muted);   /* Cor suave para texto secundário */
 }
