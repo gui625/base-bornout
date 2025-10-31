@@ -1,7 +1,11 @@
+// Importações necessárias do React para estado
 import React, { useState } from 'react';
+// Hook para navegação entre páginas
 import { useHistory } from 'react-router-dom';
+// Importação das perguntas base do questionário de burnout
 import baseQuestions from '../utils/burnoutQuestions';
 
+// Array de opções de resposta para cada pergunta do questionário
 const OPTIONS = [
   { label: 'Sim, com frequência', value: 'sim_com_frequencia' },
   { label: 'Sim, porém com pouca frequência', value: 'sim_pouca_frequencia' },
@@ -9,71 +13,122 @@ const OPTIONS = [
   { label: 'Não', value: 'nao' },
 ];
 
+// Função que determina se uma resposta é considerada positiva para burnout
+// Respostas "sim" (com ou sem frequência) indicam sintomas de burnout
 const isPositive = (value: string | null) => {
   return value === 'sim_com_frequencia' || value === 'sim_pouca_frequencia';
 };
 
+// Função que recupera o perfil do usuário do localStorage
+// Busca primeiro o usuário autenticado e depois seu perfil específico
 const getProfile = () => {
   try {
+    // Recuperar dados do usuário autenticado
     const raw = localStorage.getItem('authUser');
     const user = raw ? JSON.parse(raw) : null;
     const email = user?.username || '';
+    
+    // Recuperar perfil específico baseado no email do usuário
     const pRaw = email ? localStorage.getItem(`userProfile:${email}`) : null;
     return pRaw ? JSON.parse(pRaw) : null;
   } catch (e) {
+    // Retornar null em caso de erro na recuperação dos dados
     return null;
   }
 };
 
+// Função que gera perguntas personalizadas baseadas no perfil do usuário
+// Cria perguntas específicas usando profissão, idade e tempo de trabalho
 const buildProfileQuestions = (profile: any) => {
+  // Se não há perfil, retornar array vazio
   if (!profile) return [];
+  
+  // Extrair dados do perfil do usuário
   const { profissao, idade, tempoTrabalho } = profile;
   const q: { question: string }[] = [];
+  
+  // Adicionar perguntas específicas da profissão se disponível
   if (profissao) {
     q.push({ question: `Na sua área de ${profissao}, você sente pressão diária para atingir metas?` });
     q.push({ question: `Seu ambiente de ${profissao} dificulta pausas durante o expediente?` });
   }
+  
+  // Adicionar pergunta específica da idade se disponível
   if (typeof idade === 'number' && idade > 0) {
     q.push({ question: `Com ${idade} anos, percebe alterações no sono relacionadas ao trabalho?` });
   }
+  
+  // Adicionar pergunta específica do tempo de trabalho se disponível
   if (typeof tempoTrabalho === 'number' && tempoTrabalho > 0) {
     q.push({ question: `Trabalhando cerca de ${tempoTrabalho} horas por dia, você se sente exausto ao final?` });
   }
+  
   return q;
 };
 
+// Componente principal do questionário de burnout
 const BurnoutQuiz: React.FC = () => {
+  // Recuperar perfil do usuário para personalizar perguntas
   const profile = getProfile();
+  
+  // Combinar perguntas base com perguntas personalizadas do perfil
   const allQuestions = [...baseQuestions, ...buildProfileQuestions(profile)];
 
+  // Estado para armazenar as respostas do usuário (inicialmente todas null)
   const [answers, setAnswers] = useState<(string | null)[]>(Array(allQuestions.length).fill(null));
+  
+  // Estado para controlar efeito visual de clique nos botões
   const [clickedIndex, setClickedIndex] = useState<{ idx: number; value: string } | null>(null);
+  
+  // Hook para navegação entre páginas
   const history = useHistory();
 
+  // Função que processa a seleção de uma resposta pelo usuário
   const handleAnswer = (index: number, value: string) => {
+    // Criar cópia do array de respostas
     const updated = [...answers];
-    updated[index] = value; // garante apenas uma seleção por pergunta
+    // Atualizar a resposta na posição específica (garante apenas uma seleção por pergunta)
+    updated[index] = value;
     setAnswers(updated);
+    
+    // Ativar efeito visual de clique
     setClickedIndex({ idx: index, value });
-    setTimeout(() => setClickedIndex(null), 200); // Remove efeito após 200ms
+    // Remover efeito visual após 200ms
+    setTimeout(() => setClickedIndex(null), 200);
   };
 
+  // Função que processa o envio do questionário
   const handleSubmit = (e: React.FormEvent) => {
+    // Prevenir comportamento padrão do formulário
     e.preventDefault();
+    
+    // Calcular pontuação contando respostas positivas para burnout
     const score = answers.filter(a => isPositive(a)).length;
+    
+    // Navegar para página de resultados passando a pontuação
     history.push('/results', { score });
   };
 
+  // Renderização da interface do questionário
   return (
+    {/* Container principal do questionário */}
     <div className="quiz-container">
+      {/* Título do questionário */}
       <h2>Questionário de Burnout</h2>
+      
+      {/* Formulário do questionário */}
       <form onSubmit={handleSubmit}>
+        {/* Mapear e renderizar todas as perguntas */}
         {allQuestions.map((q, idx) => (
+          {/* Container de cada pergunta individual */}
           <div key={idx} style={{ marginBottom: 16 }}>
+            {/* Label da pergunta com numeração */}
             <label>
               {idx + 1}. {q.question}
               <br />
+              {/* Mapear e renderizar botões de opções para cada pergunta */}
               {OPTIONS.map((opt) => (
+                {/* Botão de opção de resposta com estados visuais dinâmicos */}
                 <button
                   key={opt.value}
                   type="button"
@@ -81,12 +136,15 @@ const BurnoutQuiz: React.FC = () => {
                   onClick={() => handleAnswer(idx, opt.value)}
                   style={{ marginRight: 8, marginTop: 8 }}
                 >
+                  {/* Texto da opção de resposta */}
                   {opt.label}
                 </button>
               ))}
             </label>
           </div>
         ))}
+        
+        {/* Botão de envio do questionário - desabilitado se há perguntas sem resposta */}
         <button type="submit" className="start-btn" disabled={answers.includes(null)}>
           Ver Resultado
         </button>
@@ -95,4 +153,5 @@ const BurnoutQuiz: React.FC = () => {
   );
 };
 
+// Exportar o componente para uso em outras partes da aplicação
 export default BurnoutQuiz;
