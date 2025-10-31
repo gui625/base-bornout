@@ -111,24 +111,16 @@ const BurnoutQuiz: React.FC = () => {
 
   // Renderização da interface do questionário
   return (
-    {/* Container principal do questionário */}
     <div className="quiz-container">
-      {/* Título do questionário */}
       <h2>Questionário de Burnout</h2>
       
-      {/* Formulário do questionário */}
       <form onSubmit={handleSubmit}>
-        {/* Mapear e renderizar todas as perguntas */}
         {allQuestions.map((q, idx) => (
-          {/* Container de cada pergunta individual */}
           <div key={idx} style={{ marginBottom: 16 }}>
-            {/* Label da pergunta com numeração */}
             <label>
               {idx + 1}. {q.question}
               <br />
-              {/* Mapear e renderizar botões de opções para cada pergunta */}
               {OPTIONS.map((opt) => (
-                {/* Botão de opção de resposta com estados visuais dinâmicos */}
                 <button
                   key={opt.value}
                   type="button"
@@ -136,15 +128,13 @@ const BurnoutQuiz: React.FC = () => {
                   onClick={() => handleAnswer(idx, opt.value)}
                   style={{ marginRight: 8, marginTop: 8 }}
                 >
-                  {/* Texto da opção de resposta */}
                   {opt.label}
                 </button>
               ))}
             </label>
           </div>
         ))}
-        
-        {/* Botão de envio do questionário - desabilitado se há perguntas sem resposta */}
+
         <button type="submit" className="start-btn" disabled={answers.includes(null)}>
           Ver Resultado
         </button>

@@ -73,61 +73,44 @@ const Login: React.FC = () => {
   };
 
   // Renderização da interface do usuário
+  // Renderização da página de login
   return (
-    {/* Container principal da página de login - centraliza todo o conteúdo */}
     <div className="login-container">
       {/* Card/cartão que contém o formulário de login */}
       <div className="login-card">
         {/* Título principal da página */}
-        <h2>Login</h2>
-        
+        <h1>Login</h1>
         {/* Subtítulo explicativo */}
-        <p className="login-subtitle">Acesse o app</p>
-        
+        <p>Entre para acessar recursos protegidos e estatísticas.</p>
+
         {/* Formulário de login - chama handleSubmit quando enviado */}
         <form onSubmit={handleSubmit}>
           {/* Grupo do campo de e-mail */}
           <div className="form-group">
             {/* Rótulo do campo de e-mail */}
             <label htmlFor="username">E-mail</label>
-            
             {/* Campo de entrada para e-mail do usuário */}
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Digite seu e-mail"
-              required
-            />
+            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
-          
+
           {/* Grupo do campo de senha */}
           <div className="form-group">
             {/* Rótulo do campo de senha */}
             <label htmlFor="password">Senha</label>
-            
             {/* Campo de entrada para senha do usuário - tipo password oculta o texto */}
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Digite sua senha"
-              required
-            />
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          
+
           {/* Mensagem de erro - só aparece quando há erro */}
-          {error && <div className="error-message">{error}</div>}
-          
+          {error && <p className="error-message">{error}</p>}
+
           {/* Botão de envio do formulário - executa validação antes do envio */}
-          <button type="submit" className="login-button" onClick={handlePreSubmit}>Entrar</button>
+          <button type="submit">Entrar</button>
         </form>
-        
+
         {/* Seção de ajuda - mostra credenciais do admin para teste */}
-        <div className="login-help">
-          <small>Admin: <strong>{ADMIN_EMAIL}</strong> | Senha: <strong>{ADMIN_PASSWORD}</strong></small>
+        <div className="help-section">
+          <small>Use admin/admin123 para acesso administrativo.</small>
         </div>
       </div>
     </div>

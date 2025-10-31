@@ -96,7 +96,6 @@ const ProfileSetup: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal da página de configuração de perfil */}
     <div className="profile-container">
       {/* Card/cartão que contém o formulário de perfil */}
       <div className="profile-card">

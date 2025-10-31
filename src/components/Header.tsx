@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 
 // Componente de cabeçalho da aplicação - exibe o logo e navegação principal
 const Header: React.FC = () => (
-  {/* Elemento de cabeçalho principal da página */}
   <header className="header">
     {/* Elemento de navegação */}
     <nav>

@@ -55,7 +55,6 @@ const Statistics: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal da página de estatísticas */}
     <div className="stats-container">
       {/* Barra superior com título e botão de logout */}
       <div className="stats-topbar">
@@ -68,10 +67,8 @@ const Statistics: React.FC = () => {
       
       {/* Renderização condicional: mostra mensagem se não há dados */}
       {totalTests === 0 ? (
-        {/* Mensagem exibida quando não há dados de questionários */}
         <div className="no-data">Nenhum dado de questionário encontrado ainda.</div>
       ) : (
-        {/* Container dos cards com estatísticas resumidas */}
         <div className="cards">
           {/* Card mostrando o total de testes realizados */}
           <div className="card">
@@ -107,7 +104,6 @@ const Statistics: React.FC = () => {
 
       {/* Tabela detalhada - só aparece se há resultados */}
       {results.length > 0 && (
-        {/* Container da tabela com scroll horizontal se necessário */}
         <div className="table-wrapper">
           {/* Tabela com histórico detalhado dos testes */}
           <table>
@@ -123,9 +119,7 @@ const Statistics: React.FC = () => {
             
             {/* Corpo da tabela com os dados */}
             <tbody>
-              {/* Mapeia os resultados em ordem reversa (mais recente primeiro) */}
               {results.slice().reverse().map((r, idx) => (
-                {/* Linha da tabela para cada resultado */}
                 <tr key={idx}>
                   {/* Célula com data formatada */}
                   <td>{new Date(r.timestamp).toLocaleString()}</td>

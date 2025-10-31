@@ -151,7 +151,6 @@ const Chatbot: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal do chatbot */}
     <div className="chatbot-container">
       {/* Cabeçalho do chatbot com título e botão de finalizar */}
       <div className="chatbot-header">
@@ -167,12 +166,11 @@ const Chatbot: React.FC = () => {
       <div className="chatbot-messages">
         {/* Mapear e renderizar todas as mensagens */}
         {messages.map(message => (
-          {/* Container individual de cada mensagem com classe dinâmica baseada no remetente */}
           <div 
             key={message.id} 
             className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
           >
-            {/* Conteúdo da mensagem */}
+            {/* Container individual de cada mensagem com classe dinâmica baseada no remetente */}
             <div className="message-content">
               {/* Texto da mensagem */}
               <p>{message.text}</p>

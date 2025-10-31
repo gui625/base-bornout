@@ -15,54 +15,50 @@ const FinalScreen: React.FC = () => {
   };
 
   // Renderização da interface do usuário
+  // Renderização da tela final
   return (
-    {/* Container principal da tela final */}
     <div className="final-screen-container">
       {/* Conteúdo centralizado da tela final */}
       <div className="final-content">
         {/* Título principal indicando fim do atendimento */}
-        <h1>Atendimento Finalizado</h1>
-        
+        <h1>Obrigado por utilizar o Burnout Detector</h1>
         {/* Seção de agradecimento ao usuário */}
-        <div className="thank-you-message">
+        <section className="thanks-section">
           {/* Mensagem de agradecimento */}
-          <p>Obrigado por utilizar nosso assistente virtual de burnout!</p>
+          <p>Obrigado por se cuidar e buscar informações sobre burnout.</p>
           {/* Mensagem sobre a esperança de ter ajudado */}
-          <p>Esperamos ter ajudado com suas dúvidas e fornecido informações úteis sobre saúde mental no trabalho.</p>
-        </div>
+          <p>Esperamos ter ajudado você a entender melhor seus sinais e opções.</p>
+        </section>
         
         {/* Seção com lembrete importante sobre saúde mental */}
-        <div className="final-message">
+        <section className="reminder-section">
           {/* Subtítulo da seção de lembrete */}
-          <h2>Lembre-se</h2>
+          <h2>Lembre-se:</h2>
           {/* Mensagem sobre importância da saúde mental */}
-          <p>O cuidado com a saúde mental é essencial para uma vida equilibrada e produtiva.</p>
+          <p>Saúde mental é tão importante quanto a saúde física.</p>
           {/* Recomendação para buscar ajuda profissional */}
-          <p>Se você está enfrentando sintomas de burnout, considere buscar ajuda profissional.</p>
-        </div>
+          <p>Se você está se sentindo sobrecarregado, procure ajuda profissional.</p>
+        </section>
         
         {/* Seção com recursos e dicas adicionais */}
-        <div className="resources">
+        <section className="resources-section">
           {/* Título da seção de recursos */}
-          <h3>Recursos Adicionais</h3>
-          
+          <h2>Recursos úteis</h2>
           {/* Lista de recomendações para cuidados com saúde mental */}
           <ul>
             {/* Recomendação para consultar profissional */}
-            <li>Consulte um profissional de saúde mental</li>
+            <li>Consultar um psicólogo ou psiquiatra.</li>
             {/* Dica sobre técnicas de gerenciamento de estresse */}
-            <li>Pratique técnicas de gerenciamento de estresse</li>
+            <li>Praticar técnicas de respiração e mindfulness.</li>
             {/* Conselho sobre equilíbrio trabalho-vida */}
-            <li>Estabeleça limites saudáveis entre trabalho e vida pessoal</li>
+            <li>Definir limites e equilibrar trabalho e vida pessoal.</li>
             {/* Importância de relacionamentos de apoio */}
-            <li>Cultive relacionamentos de apoio</li>
+            <li>Conversar com amigos e família.</li>
           </ul>
-        </div>
+        </section>
         
         {/* Botão para retornar à página inicial */}
-        <button className="return-button" onClick={handleReturnHome}>
-          Voltar para o Início
-        </button>
+        <button className="back-home" onClick={() => window.location.href = '/'}>Voltar para início</button>
       </div>
     </div>
   );
