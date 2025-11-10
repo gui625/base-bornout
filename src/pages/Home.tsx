@@ -15,7 +15,6 @@ const Home: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal da página inicial */}
     <main className="home-container">
       {/* Seção de introdução com informações sobre o app */}
       <section className="intro">

@@ -1,6 +1,7 @@
 // Importações necessárias do React para navegação e localização
 import React from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
+import Recommendation from '../components/Recommendation';
 import '../styles/results.css';
 
 // Interface que define a estrutura dos dados passados via navegação
