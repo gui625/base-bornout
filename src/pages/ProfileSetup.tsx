@@ -72,7 +72,6 @@ const ProfileSetup: React.FC = () => {
   
   // Função principal que processa o salvamento do perfil
   const handleSubmit = (e: React.FormEvent) => {
-    // Previne o comportamento padrão do formulário
     e.preventDefault();
     
     // Se não há e-mail, redireciona para login
@@ -94,60 +93,36 @@ const ProfileSetup: React.FC = () => {
     history.push('/quiz');
   };
 
-  // Renderização da interface do usuário
   return (
-    {/* Container principal da página de configuração de perfil */}
     <div className="profile-container">
-      {/* Card/cartão que contém o formulário de perfil */}
       <div className="profile-card">
-        {/* Título principal da página */}
         <h2>Complete seu Perfil</h2>
         
-        {/* Subtítulo explicativo sobre a importância dos dados */}
         <p className="profile-subtitle">Essas informações ajudam a personalizar o questionário</p>
         
-        {/* Formulário de configuração de perfil - chama handleSubmit quando enviado */}
         <form onSubmit={handleSubmit}>
-          {/* Grupo do campo de nome */}
           <div className="form-group">
-            {/* Rótulo do campo de nome */}
             <label htmlFor="nome">Nome</label>
-            
-            {/* Campo de entrada para nome do usuário */}
             <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Seu nome" required />
           </div>
           
-          {/* Grupo do campo de idade */}
           <div className="form-group">
-            {/* Rótulo do campo de idade */}
             <label htmlFor="idade">Idade</label>
-            
-            {/* Campo de entrada para idade - tipo number aceita apenas números */}
             <input id="idade" type="number" value={idade} onChange={(e) => setIdade(Number(e.target.value))} placeholder="Sua idade" required />
           </div>
           
-          {/* Grupo do campo de profissão */}
           <div className="form-group">
-            {/* Rótulo do campo de profissão */}
             <label htmlFor="profissao">Profissão</label>
-            
-            {/* Campo de entrada para profissão do usuário */}
             <input id="profissao" type="text" value={profissao} onChange={(e) => setProfissao(e.target.value)} placeholder="Sua profissão" required />
           </div>
           
-          {/* Grupo do campo de tempo de trabalho */}
           <div className="form-group">
-            {/* Rótulo do campo de tempo de trabalho com explicação */}
             <label htmlFor="tempo">Tempo diário de trabalho (horas)</label>
-            
-            {/* Campo de entrada para horas trabalhadas por dia - tipo number */}
             <input id="tempo" type="number" value={tempoTrabalho} onChange={(e) => setTempoTrabalho(Number(e.target.value))} placeholder="Horas por dia" required />
           </div>
           
-          {/* Mensagem de erro - só aparece quando há erro */}
           {error && <div className="error-message">{error}</div>}
           
-          {/* Botão de envio do formulário - executa validação antes do envio */}
           <button type="submit" className="save-button" onClick={handlePreSubmit}>Salvar e continuar</button>
         </form>
       </div>

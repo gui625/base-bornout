@@ -14,13 +14,11 @@ const OPTIONS = [
 ];
 
 // Função que determina se uma resposta é considerada positiva para burnout
-// Respostas "sim" (com ou sem frequência) indicam sintomas de burnout
 const isPositive = (value: string | null) => {
   return value === 'sim_com_frequencia' || value === 'sim_pouca_frequencia';
 };
 
 // Função que recupera o perfil do usuário do localStorage
-// Busca primeiro o usuário autenticado e depois seu perfil específico
 const getProfile = () => {
   try {
     // Recuperar dados do usuário autenticado
@@ -38,7 +36,6 @@ const getProfile = () => {
 };
 
 // Função que gera perguntas personalizadas baseadas no perfil do usuário
-// Cria perguntas específicas usando profissão, idade e tempo de trabalho
 const buildProfileQuestions = (profile: any) => {
   // Se não há perfil, retornar array vazio
   if (!profile) return [];
@@ -111,24 +108,16 @@ const BurnoutQuiz: React.FC = () => {
 
   // Renderização da interface do questionário
   return (
-    {/* Container principal do questionário */}
     <div className="quiz-container">
-      {/* Título do questionário */}
       <h2>Questionário de Burnout</h2>
       
-      {/* Formulário do questionário */}
       <form onSubmit={handleSubmit}>
-        {/* Mapear e renderizar todas as perguntas */}
         {allQuestions.map((q, idx) => (
-          {/* Container de cada pergunta individual */}
           <div key={idx} style={{ marginBottom: 16 }}>
-            {/* Label da pergunta com numeração */}
             <label>
               {idx + 1}. {q.question}
               <br />
-              {/* Mapear e renderizar botões de opções para cada pergunta */}
               {OPTIONS.map((opt) => (
-                {/* Botão de opção de resposta com estados visuais dinâmicos */}
                 <button
                   key={opt.value}
                   type="button"
@@ -136,7 +125,6 @@ const BurnoutQuiz: React.FC = () => {
                   onClick={() => handleAnswer(idx, opt.value)}
                   style={{ marginRight: 8, marginTop: 8 }}
                 >
-                  {/* Texto da opção de resposta */}
                   {opt.label}
                 </button>
               ))}
@@ -144,7 +132,6 @@ const BurnoutQuiz: React.FC = () => {
           </div>
         ))}
         
-        {/* Botão de envio do questionário - desabilitado se há perguntas sem resposta */}
         <button type="submit" className="start-btn" disabled={answers.includes(null)}>
           Ver Resultado
         </button>
@@ -153,5 +140,4 @@ const BurnoutQuiz: React.FC = () => {
   );
 };
 
-// Exportar o componente para uso em outras partes da aplicação
 export default BurnoutQuiz;

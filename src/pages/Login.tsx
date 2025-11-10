@@ -21,23 +21,18 @@ const Login: React.FC = () => {
   // Estado para controlar mensagens de erro na tela
   const [error, setError] = useState<string | null>(null);
 
-  // Função que valida se os campos estão vazios antes do envio
-  // Exibe uma mensagem de erro se tentar enviar sem preencher nada
-  const handlePreSubmit = () => {
-    // Verifica se ambos os campos estão vazios (sem contar espaços)
-    if (username.trim() === '' && password.trim() === '') {
-      // Define mensagem de erro para orientar o usuário
-      setError('Por favor, preencha e-mail e senha antes de enviar.');
-    } else {
-      // Remove a mensagem de erro se pelo menos um campo foi preenchido
-      setError(null);
-    }
-  };
-
   // Função principal que processa o login quando o formulário é enviado
   const handleSubmit = (e: React.FormEvent) => {
-    // Previne o comportamento padrão do formulário (recarregar a página)
     e.preventDefault();
+    
+    // Validação: verifica se os campos estão vazios
+    if (username.trim() === '' || password.trim() === '') {
+      setError('Por favor, preencha e-mail e senha antes de enviar.');
+      return;
+    }
+    
+    // Remove a mensagem de erro se a validação passar
+    setError(null);
     
     // Verifica se as credenciais correspondem ao administrador
     if (username === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
@@ -45,8 +40,6 @@ const Login: React.FC = () => {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('authUser', JSON.stringify({ username }));
       localStorage.setItem('authRole', 'admin');
-      // Remove qualquer mensagem de erro
-      setError(null);
       // Redireciona admin para a página de estatísticas
       history.push('/statistics');
     } else {
@@ -55,8 +48,6 @@ const Login: React.FC = () => {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('authUser', JSON.stringify({ username }));
       localStorage.setItem('authRole', 'user');
-      // Remove qualquer mensagem de erro
-      setError(null);
 
       // Verifica se o usuário já completou o perfil anteriormente
       const completedKey = `userProfileCompleted:${username}`;
@@ -74,24 +65,14 @@ const Login: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal da página de login - centraliza todo o conteúdo */}
     <div className="login-container">
-      {/* Card/cartão que contém o formulário de login */}
       <div className="login-card">
-        {/* Título principal da página */}
         <h2>Login</h2>
-        
-        {/* Subtítulo explicativo */}
         <p className="login-subtitle">Acesse o app</p>
         
-        {/* Formulário de login - chama handleSubmit quando enviado */}
         <form onSubmit={handleSubmit}>
-          {/* Grupo do campo de e-mail */}
           <div className="form-group">
-            {/* Rótulo do campo de e-mail */}
             <label htmlFor="username">E-mail</label>
-            
-            {/* Campo de entrada para e-mail do usuário */}
             <input
               id="username"
               type="text"
@@ -102,12 +83,8 @@ const Login: React.FC = () => {
             />
           </div>
           
-          {/* Grupo do campo de senha */}
           <div className="form-group">
-            {/* Rótulo do campo de senha */}
             <label htmlFor="password">Senha</label>
-            
-            {/* Campo de entrada para senha do usuário - tipo password oculta o texto */}
             <input
               id="password"
               type="password"
@@ -118,14 +95,11 @@ const Login: React.FC = () => {
             />
           </div>
           
-          {/* Mensagem de erro - só aparece quando há erro */}
           {error && <div className="error-message">{error}</div>}
           
-          {/* Botão de envio do formulário - executa validação antes do envio */}
-          <button type="submit" className="login-button" onClick={handlePreSubmit}>Entrar</button>
+          <button type="submit" className="login-button">Entrar</button>
         </form>
         
-        {/* Seção de ajuda - mostra credenciais do admin para teste */}
         <div className="login-help">
           <small>Admin: <strong>{ADMIN_EMAIL}</strong> | Senha: <strong>{ADMIN_PASSWORD}</strong></small>
         </div>

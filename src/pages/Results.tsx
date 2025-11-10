@@ -57,23 +57,16 @@ const Results: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal da página de resultados */}
     <div className="results-container">
-      {/* Título da página de resultados */}
       <h2>Resultado</h2>
       
-      {/* Exibição da pontuação obtida no questionário */}
       <p>Respostas positivas: {score}</p>
       
-      {/* Mensagem de recomendação baseada na pontuação */}
       <p className="recommendation">{renderMessage()}</p>
       
-      {/* Seção de redirecionamento para o chatbot */}
       <div className="chatbot-redirect">
-        {/* Texto explicativo sobre o assistente virtual */}
         <p>Tem dúvidas sobre burnout ou saúde mental?</p>
         
-        {/* Botão que redireciona para o chatbot */}
         <button onClick={handleChatbotRedirect} className="chatbot-button">
           Converse com nosso Assistente Virtual
         </button>

@@ -24,17 +24,12 @@ const Recommendation: React.FC<RecommendationProps> = ({ score }) => {
         }
     };
 
-    // Renderização da interface de recomendação
     return (
-        {/* Container principal da seção de recomendação */}
         <div className="recommendation">
-            {/* Título da seção de recomendação */}
             <h2>Recomendação</h2>
-            {/* Parágrafo com a recomendação personalizada baseada na pontuação */}
             <p>{getRecommendation()}</p>
         </div>
     );
 };
 
-// Exportar o componente para uso em outras partes da aplicação
 export default Recommendation;

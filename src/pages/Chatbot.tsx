@@ -151,42 +151,29 @@ const Chatbot: React.FC = () => {
 
   // Renderização da interface do usuário
   return (
-    {/* Container principal do chatbot */}
     <div className="chatbot-container">
-      {/* Cabeçalho do chatbot com título e botão de finalizar */}
       <div className="chatbot-header">
-        {/* Título principal do assistente virtual */}
         <h1>Assistente Virtual de Burnout</h1>
-        {/* Subtítulo explicativo sobre a função do chatbot */}
         <p>Tire suas dúvidas sobre burnout e saúde mental</p>
-        {/* Botão para finalizar o atendimento e ir para tela final */}
         <button className="finish-button" onClick={handleFinishChat}>Finalizar Atendimento</button>
       </div>
       
-      {/* Área de exibição das mensagens do chat */}
       <div className="chatbot-messages">
-        {/* Mapear e renderizar todas as mensagens */}
         {messages.map(message => (
-          {/* Container individual de cada mensagem com classe dinâmica baseada no remetente */}
           <div 
             key={message.id} 
             className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
           >
-            {/* Conteúdo da mensagem */}
             <div className="message-content">
-              {/* Texto da mensagem */}
               <p>{message.text}</p>
-              {/* Horário de envio da mensagem */}
               <span className="message-time">{formatTime(message.timestamp)}</span>
             </div>
           </div>
         ))}
         
-        {/* Indicador de digitação quando o bot está processando resposta */}
         {isLoading && (
           <div className="message bot-message">
             <div className="message-content">
-              {/* Animação de três pontos indicando que o bot está digitando */}
               <div className="typing-indicator">
                 <span></span>
                 <span></span>
@@ -196,13 +183,10 @@ const Chatbot: React.FC = () => {
           </div>
         )}
         
-        {/* Elemento de referência para scroll automático para o final das mensagens */}
         <div ref={messagesEndRef} />
       </div>
       
-      {/* Área de entrada de texto para o usuário */}
       <div className="chatbot-input">
-        {/* Campo de texto para digitar mensagens */}
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -210,7 +194,6 @@ const Chatbot: React.FC = () => {
           placeholder="Digite sua mensagem aqui..."
           disabled={isLoading}
         />
-        {/* Botão para enviar mensagem - desabilitado se não há texto ou se está carregando */}
         <button 
           onClick={handleSendMessage} 
           disabled={inputText.trim() === '' || isLoading}
