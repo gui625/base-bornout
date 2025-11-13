@@ -68,22 +68,11 @@ const Login: React.FC = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-<<<<<<< HEAD
         <h2>Login</h2>
         <p className="login-subtitle">Acesse o app</p>
-        
-=======
-        {/* Título principal da página */}
-        <h1>Login</h1>
-        {/* Subtítulo explicativo */}
-        <p>Entre para acessar recursos protegidos e estatísticas.</p>
-
-        {/* Formulário de login - chama handleSubmit quando enviado */}
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">E-mail</label>
-<<<<<<< HEAD
             <input
               id="username"
               type="text"
@@ -93,17 +82,8 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          
-=======
-            {/* Campo de entrada para e-mail do usuário */}
-            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </div>
-
-          {/* Grupo do campo de senha */}
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
           <div className="form-group">
             <label htmlFor="password">Senha</label>
-<<<<<<< HEAD
             <input
               id="password"
               type="password"
@@ -113,30 +93,14 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          
+
           {error && <div className="error-message">{error}</div>}
-          
+
           <button type="submit" className="login-button">Entrar</button>
         </form>
-        
+
         <div className="login-help">
           <small>Admin: <strong>{ADMIN_EMAIL}</strong> | Senha: <strong>{ADMIN_PASSWORD}</strong></small>
-=======
-            {/* Campo de entrada para senha do usuário - tipo password oculta o texto */}
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-
-          {/* Mensagem de erro - só aparece quando há erro */}
-          {error && <p className="error-message">{error}</p>}
-
-          {/* Botão de envio do formulário - executa validação antes do envio */}
-          <button type="submit">Entrar</button>
-        </form>
-
-        {/* Seção de ajuda - mostra credenciais do admin para teste */}
-        <div className="help-section">
-          <small>Use admin/admin123 para acesso administrativo.</small>
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
         </div>
       </div>
     </div>

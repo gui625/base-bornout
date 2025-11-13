@@ -131,11 +131,7 @@ const BurnoutQuiz: React.FC = () => {
             </label>
           </div>
         ))}
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
         <button type="submit" className="start-btn" disabled={answers.includes(null)}>
           Ver Resultado
         </button>

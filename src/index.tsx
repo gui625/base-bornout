@@ -1,9 +1,15 @@
+import process from 'process'
 // Importação da biblioteca React para criação de componentes
 import React from 'react';
 // Importação do ReactDOM para renderização da aplicação no DOM
 import ReactDOM from 'react-dom';
 // Importação do componente principal da aplicação
 import App from './App';
+
+declare global {
+  interface Window { process: any }
+}
+window.process = window.process || process;
 
 // Renderização da aplicação React no elemento HTML com id 'root'
 ReactDOM.render(

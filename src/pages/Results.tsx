@@ -60,36 +60,14 @@ const Results: React.FC = () => {
   // Renderização da página de resultados
   return (
     <div className="results-container">
-<<<<<<< HEAD
       <h2>Resultado</h2>
-      
-      <p>Respostas positivas: {score}</p>
-      
-      <p className="recommendation">{renderMessage()}</p>
-      
-      <div className="chatbot-redirect">
-        <p>Tem dúvidas sobre burnout ou saúde mental?</p>
-        
-        <button onClick={handleChatbotRedirect} className="chatbot-button">
-          Converse com nosso Assistente Virtual
-        </button>
-=======
-      {/* Título da página de resultados */}
-      <h1>Resultados do Questionário</h1>
-
-      {/* Exibição da pontuação obtida no questionário */}
       <p className="score">Sua pontuação: {score}</p>
-
-      {/* Mensagem de recomendação baseada na pontuação */}
       <Recommendation score={score} />
-
-      {/* Seção de redirecionamento para o chatbot */}
       <div className="chatbot-redirect">
-        {/* Texto explicativo sobre o assistente virtual */}
         <p>Quer conversar com nosso assistente virtual para obter orientações?</p>
-        {/* Botão que redireciona para o chatbot */}
-        <button onClick={() => history.push('/chatbot')}>Ir para o Chatbot</button>
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
+        <button onClick={handleChatbotRedirect} className="chatbot-button">
+          Ir para o Chatbot
+        </button>
       </div>
     </div>
   );

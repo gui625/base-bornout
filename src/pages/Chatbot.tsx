@@ -164,10 +164,6 @@ const Chatbot: React.FC = () => {
             key={message.id} 
             className={`message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}
           >
-<<<<<<< HEAD
-=======
-            {/* Container individual de cada mensagem com classe dinâmica baseada no remetente */}
->>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
             <div className="message-content">
               <p>{message.text}</p>
               <span className="message-time">{formatTime(message.timestamp)}</span>
