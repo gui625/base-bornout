@@ -1,6 +1,7 @@
 // Importações necessárias do React para navegação e localização
 import React from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
+import Recommendation from '../components/Recommendation';
 import '../styles/results.css';
 
 // Interface que define a estrutura dos dados passados via navegação
@@ -56,8 +57,10 @@ const Results: React.FC = () => {
   };
 
   // Renderização da interface do usuário
+  // Renderização da página de resultados
   return (
     <div className="results-container">
+<<<<<<< HEAD
       <h2>Resultado</h2>
       
       <p>Respostas positivas: {score}</p>
@@ -70,6 +73,23 @@ const Results: React.FC = () => {
         <button onClick={handleChatbotRedirect} className="chatbot-button">
           Converse com nosso Assistente Virtual
         </button>
+=======
+      {/* Título da página de resultados */}
+      <h1>Resultados do Questionário</h1>
+
+      {/* Exibição da pontuação obtida no questionário */}
+      <p className="score">Sua pontuação: {score}</p>
+
+      {/* Mensagem de recomendação baseada na pontuação */}
+      <Recommendation score={score} />
+
+      {/* Seção de redirecionamento para o chatbot */}
+      <div className="chatbot-redirect">
+        {/* Texto explicativo sobre o assistente virtual */}
+        <p>Quer conversar com nosso assistente virtual para obter orientações?</p>
+        {/* Botão que redireciona para o chatbot */}
+        <button onClick={() => history.push('/chatbot')}>Ir para o Chatbot</button>
+>>>>>>> b8778a83a6c1019437fee09e90eddfc070e76203
       </div>
     </div>
   );
