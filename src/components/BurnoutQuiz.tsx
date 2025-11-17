@@ -1,7 +1,7 @@
+// src/components/BurnoutQuiz.tsx
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import baseQuestions from '../utils/burnoutQuestions';
-import { API_BASE } from "../services/api";   // ⬅️ IMPORTANTE
 
 const OPTIONS = [
   { label: 'Sim, com frequência', value: 'sim_com_frequencia' },
@@ -53,43 +53,27 @@ const BurnoutQuiz: React.FC = () => {
 
   const handleAnswer = (index: number, value: string) => {
     const updated = [...answers];
-    updated[index] = value;
+    updated[index] = value; // garante apenas uma seleção por pergunta
     setAnswers(updated);
     setClickedIndex({ idx: index, value });
-    setTimeout(() => setClickedIndex(null), 200);
+    setTimeout(() => setClickedIndex(null), 200); // Remove efeito após 200ms
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const score = answers.filter((a) => isPositive(a)).length;
 
-    const score = answers.filter(a => isPositive(a)).length;
+    const detailedAnswers = allQuestions.map((q, idx) => ({
+      index: idx + 1,
+      question: q.question,
+      answer: answers[idx],
+      positive: isPositive(answers[idx]),
+    }));
 
-    let level = "baixo";
-    if (score >= 10) level = "alto";
-    else if (score >= 5) level = "moderado";
-
-    // pega e-mail do usuário
-    const user = JSON.parse(localStorage.getItem("authUser") || "{}");
-    const email = user?.username || null;
-
-    // salva no backend
-    try {
-      await fetch(`${API_BASE}/api/quiz-results`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: email,
-          email,
-          score,
-          level,
-        }),
-      });
-    } catch (error) {
-      console.error("Erro ao salvar resultado:", error);
-    }
-
-    // vai para tela final
-    history.push('/results', { score, level });
+    history.push('/results', {
+      score,
+      answers: detailedAnswers,
+    });
   };
 
   return (
@@ -105,7 +89,9 @@ const BurnoutQuiz: React.FC = () => {
                 <button
                   key={opt.value}
                   type="button"
-                  className={`button ${answers[idx] === opt.value ? 'selected' : ''} ${clickedIndex?.idx === idx && clickedIndex.value === opt.value ? 'clicked' : ''}`}
+                  className={`button ${answers[idx] === opt.value ? 'selected' : ''} ${
+                    clickedIndex?.idx === idx && clickedIndex.value === opt.value ? 'clicked' : ''
+                  }`}
                   onClick={() => handleAnswer(idx, opt.value)}
                   style={{ marginRight: 8, marginTop: 8 }}
                 >

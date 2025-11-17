@@ -152,6 +152,21 @@ app.post("/api/gemini", async (req, res) => {
       .json({ error: e?.message ?? "Falha na API Gemini" });
   }
 });
+function getLevelFromScore(score) {
+  if (score <= 8) return "baixo";
+  if (score <= 15) return "moderado";
+  return "alto";
+}
+
+function getRiskProfile(score) {
+  if (score <= 8) {
+    return "No momento, você apresenta poucos sinais de burnout, mas é importante manter hábitos saudáveis.";
+  }
+  if (score <= 15) {
+    return "Você apresenta sinais de alerta para burnout, principalmente em relação à sobrecarga e cansaço. É recomendado revisar sua rotina e, se possível, buscar orientação profissional.";
+  }
+  return "Você apresenta muitos sinais de burnout. O ideal é procurar um médico ou psicólogo para uma avaliação mais aprofundada e pensar em ajustes na carga de trabalho e autocuidado.";
+}
 
 // =============== ROTAS DO BANCO (QUIZ) ===============
 
@@ -217,29 +232,43 @@ app.get("/api/quiz-results/test", (req, res) => {
   }
 });
 
-// Salvar resultado do quiz
+// Salvar resultado do quiz (versão enriquecida)
 app.post("/api/quiz-results", (req, res) => {
   try {
-    const { name, email, score, level } = req.body ?? {};
+    const { name, email, score, level, answers } = req.body ?? {};
 
-    if (typeof score !== "number" || !level) {
+    if (typeof score !== "number") {
       return res
         .status(400)
-        .json({ error: "Score (number) e level (string) são obrigatórios." });
+        .json({ error: "Score (number) é obrigatório." });
     }
 
+    const finalLevel = level || getLevelFromScore(score);
+    const riskProfile = getRiskProfile(score);
+
+    const answersJson = answers ? JSON.stringify(answers) : null;
     const now = new Date().toISOString();
 
     const stmt = db.prepare(`
-      INSERT INTO quiz_results (name, email, score, level, created_at)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO quiz_results (name, email, score, level, answers_json, risk_profile, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
-    const info = stmt.run(name || null, email || null, score, level, now);
+    const info = stmt.run(
+      name || null,
+      email || null,
+      score,
+      finalLevel,
+      answersJson,
+      riskProfile,
+      now
+    );
 
     return res.status(201).json({
       id: info.lastInsertRowid,
       message: "Resultado salvo com sucesso.",
+      level: finalLevel,
+      risk_profile: riskProfile,
     });
   } catch (err) {
     console.error("Erro /api/quiz-results (POST):", err);
@@ -251,7 +280,14 @@ app.post("/api/quiz-results", (req, res) => {
 app.get("/api/quiz-results", (req, res) => {
   try {
     const stmt = db.prepare(`
-      SELECT id, name, email, score, level, created_at
+      SELECT
+        id,
+        name,
+        email,
+        score,
+        level,
+        risk_profile,
+        created_at
       FROM quiz_results
       ORDER BY created_at DESC
     `);
@@ -265,6 +301,7 @@ app.get("/api/quiz-results", (req, res) => {
       .json({ error: "Erro ao buscar resultados do quiz." });
   }
 });
+
 
 // ---- Server
 const PORT = process.env.PORT || 3001;

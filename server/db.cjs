@@ -18,9 +18,12 @@ db.exec(`
     email TEXT,
     score INTEGER NOT NULL,
     level TEXT NOT NULL,
+    answers_json TEXT,     
+    risk_profile TEXT,      
     created_at TEXT NOT NULL
   );
 `);
+
 
 const tables = db
   .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
