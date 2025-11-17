@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE } from "../services/api"; // ⬅️ NOVO IMPORT
 
 type Role = "user" | "assistant";
 
@@ -33,7 +34,7 @@ const IA: React.FC = () => {
     setLoading(true);
 
     try {
-      const resp = await fetch("/api/gemini", {
+      const resp = await fetch(`${API_BASE}/api/gemini`, {   // ⬅️ AQUI TROCOU
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

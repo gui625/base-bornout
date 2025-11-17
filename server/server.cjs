@@ -4,7 +4,11 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 
 // node-fetch compat (funciona no Node 18/20 e versões mais antigas)
-const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: f }) => f(...args));
+
+// Banco SQLite
+const db = require("./db.cjs");
 
 dotenv.config();
 
@@ -24,7 +28,71 @@ app.get("/", (_req, res) => {
   res.send("MindCare API OK");
 });
 
+// ---- IA (Gemini) - VERSÃO ORIGINAL
 // ---- IA (Gemini)
+
+// helper pra esperar entre os retries
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function callGeminiWithRetry(prompt, apiKey, model, maxRetries = 3) {
+  const baseUrl = "https://generativelanguage.googleapis.com/v1/models";
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    const url = `${baseUrl}/${model}:generateContent?key=${apiKey}`;
+
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    let data = null;
+    try {
+      data = await r.json();
+    } catch {
+      data = null;
+    }
+
+    console.log("STATUS GEMINI:", r.status);
+    console.log("BODY GEMINI:", JSON.stringify(data, null, 2));
+
+    // se estiver sobrecarregado ou com rate limit, tenta de novo
+    if (r.status === 503 || r.status === 429) {
+      console.warn(
+        `Gemini indisponível (tentativa ${attempt}/${maxRetries}).`
+      );
+      if (attempt === maxRetries) {
+        return {
+          error:
+            "O modelo de IA está indisponível no momento. Tente novamente em instantes.",
+        };
+      }
+      await sleep(500 * attempt);
+      continue;
+    }
+
+    // outros erros da API
+    if (!r.ok || data?.error) {
+      const errMsg =
+        data?.error?.message || `Falha na API Gemini (status ${r.status})`;
+      return { error: errMsg };
+    }
+
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Não foi possível gerar resposta agora.";
+    return { reply };
+  }
+
+  return {
+    error: "Não foi possível obter resposta da IA. Tente novamente mais tarde.",
+  };
+}
+
 app.post("/api/gemini", async (req, res) => {
   try {
     const { message = "", history = [] } = req.body ?? {};
@@ -32,9 +100,7 @@ app.post("/api/gemini", async (req, res) => {
       return res.status(400).json({ error: "Mensagem vazia" });
     }
 
-    // Aceita histórico em dois formatos:
-    // 1) [{ role: "user" | "assistant", content: "..." }]
-    // 2) [{ user: "...", ai: "..." }]
+    // Aceita histórico em 2 formatos
     const stitched =
       (Array.isArray(history) ? history : [])
         .map((h) => {
@@ -56,9 +122,8 @@ app.post("/api/gemini", async (req, res) => {
 
     const system = `Você é um assistente gentil e objetivo sobre prevenção de burnout.
 - Fale em português do Brasil, com empatia e linguagem clara.
-- Não dê diagnóstico médico. Inclua avisos de procurar um profissional quando necessário.
-- Seja conciso (3–6 frases) e, quando útil, liste passos práticos.
-- Se perguntarem sobre crises agudas (ideação suicida, autolesão), incentive buscar ajuda profissional e linhas de apoio locais.`;
+- Não dê diagnóstico médico. Inclua avisos de buscar um profissional quando necessário.
+- Seja conciso (3–6 frases).`;
 
     const prompt =
       system +
@@ -70,42 +135,134 @@ app.post("/api/gemini", async (req, res) => {
       return res.status(500).json({ error: "GEMINI_API_KEY ausente no .env" });
     }
 
-    const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
-      apiKey;
+    // 👇 modelo configurável via .env
+    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
-    const r = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // Importante: cada request cria um body novo (evita 'Body already read')
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
-    });
+    const result = await callGeminiWithRetry(prompt, apiKey, model, 3);
 
-    // Trata erros de rede/Google
-    let data;
-    try {
-      data = await r.json();
-    } catch {
-      data = null;
+    if (result.error) {
+      return res.status(502).json({ error: result.error });
     }
 
-    if (!r.ok) {
-      const errMsg =
-        data?.error?.message ||
-        `Falha na API Gemini (status ${r.status})`;
-      return res.status(502).json({ error: errMsg });
-    }
-
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Não foi possível gerar resposta agora.";
-    return res.json({ reply });
+    return res.json({ reply: result.reply });
   } catch (e) {
+    console.error("Erro /api/gemini:", e);
     return res
       .status(500)
       .json({ error: e?.message ?? "Falha na API Gemini" });
+  }
+});
+
+// =============== ROTAS DO BANCO (QUIZ) ===============
+
+// DEBUG DO BANCO
+app.get("/api/quiz-results/debug", (req, res) => {
+  try {
+    const tables = db
+      .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
+      .all();
+
+    const row = db
+      .prepare("SELECT COUNT(*) as total FROM quiz_results")
+      .get();
+
+    return res.json({
+      ok: true,
+      tables,
+      totalRows: row.total,
+    });
+  } catch (err) {
+    console.error("Erro em /api/quiz-results/debug:", err);
+    return res.status(500).json({
+      ok: false,
+      error: String(err),
+    });
+  }
+});
+
+// ROTA DE TESTE DO BANCO
+app.get("/api/quiz-results/test", (req, res) => {
+  try {
+    const now = new Date().toISOString();
+
+    const insert = db.prepare(`
+      INSERT INTO quiz_results (name, email, score, level, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    const info = insert.run(
+      "Teste",
+      "teste@example.com",
+      10,
+      "baixo",
+      now
+    );
+
+    const countStmt = db.prepare(`
+      SELECT COUNT(*) as total FROM quiz_results
+    `);
+    const row = countStmt.get();
+
+    return res.json({
+      ok: true,
+      insertedId: info.lastInsertRowid,
+      totalRows: row.total,
+    });
+  } catch (err) {
+    console.error("Erro em /api/quiz-results/test:", err);
+    return res.status(500).json({
+      ok: false,
+      error: String(err),
+    });
+  }
+});
+
+// Salvar resultado do quiz
+app.post("/api/quiz-results", (req, res) => {
+  try {
+    const { name, email, score, level } = req.body ?? {};
+
+    if (typeof score !== "number" || !level) {
+      return res
+        .status(400)
+        .json({ error: "Score (number) e level (string) são obrigatórios." });
+    }
+
+    const now = new Date().toISOString();
+
+    const stmt = db.prepare(`
+      INSERT INTO quiz_results (name, email, score, level, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    const info = stmt.run(name || null, email || null, score, level, now);
+
+    return res.status(201).json({
+      id: info.lastInsertRowid,
+      message: "Resultado salvo com sucesso.",
+    });
+  } catch (err) {
+    console.error("Erro /api/quiz-results (POST):", err);
+    return res.status(500).json({ error: "Erro ao salvar resultado do quiz." });
+  }
+});
+
+// Listar resultados (ex.: tela de estatísticas)
+app.get("/api/quiz-results", (req, res) => {
+  try {
+    const stmt = db.prepare(`
+      SELECT id, name, email, score, level, created_at
+      FROM quiz_results
+      ORDER BY created_at DESC
+    `);
+
+    const rows = stmt.all();
+    return res.json(rows);
+  } catch (err) {
+    console.error("Erro /api/quiz-results (GET):", err);
+    return res
+      .status(500)
+      .json({ error: "Erro ao buscar resultados do quiz." });
   }
 });
 
