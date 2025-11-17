@@ -1,94 +1,167 @@
 import React, { useState } from "react";
-import { chatGemini, ChatTurn } from "../utils/api";
 
-export default function IA() {
-  const [msgs, setMsgs] = useState<ChatTurn[]>([
+type Role = "user" | "assistant";
+
+interface Message {
+  role: Role;
+  content: string;
+}
+
+const IA: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
-        "Oi! Posso te dar dicas rápidas para reduzir estresse e prevenir burnout. Como posso te apoiar hoje?",
+        "Olá! Eu sou a MindCare, sua assistente para prevenção de burnout. Como você está se sentindo hoje?",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  async function onSend(e: React.FormEvent) {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const text = input.trim();
     if (!text || loading) return;
 
-    const nextMsgs = [...msgs, { role: "user", content: text }];
-    setMsgs(nextMsgs);
+    // adiciona mensagem do usuário na tela
+    const nextMessages: Message[] = [
+      ...messages,
+      { role: "user", content: text },
+    ];
+    setMessages(nextMessages);
     setInput("");
     setLoading(true);
-    setError(null);
 
     try {
-      const reply = await chatGemini(text, nextMsgs);
-      setMsgs([...nextMsgs, { role: "assistant", content: reply }]);
-    } catch (err: any) {
-      setError(err?.message || "Falha ao consultar a IA.");
+      const resp = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text,
+          history: nextMessages,
+        }),
+      });
+
+      const data = await resp.json();
+
+      const reply: string =
+        data?.reply ||
+        "Desculpe, não consegui responder agora. Tente novamente em instantes.";
+
+      setMessages([
+        ...nextMessages,
+        { role: "assistant", content: reply },
+      ]);
+    } catch (err) {
+      console.error(err);
+      setMessages([
+        ...nextMessages,
+        {
+          role: "assistant",
+          content:
+            "Tive um problema para falar com o servidor no momento. Tente de novo mais tarde.",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div style={{ maxWidth: 480, margin: "auto", padding: 16 }}>
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px" }}>
+      <h2 style={{ marginBottom: 16 }}>Assistente MindCare</h2>
+
       <div
         style={{
           border: "1px solid #ddd",
           borderRadius: 8,
           padding: 12,
-          height: 360,
+          height: "60vh",
           overflowY: "auto",
-          background: "#fafafa",
+          marginBottom: 12,
+          backgroundColor: "#fafafa",
         }}
       >
-        {msgs.map((m, i) => (
+        {messages.map((msg, idx) => (
           <div
-            key={i}
+            key={idx}
             style={{
-              textAlign: m.role === "user" ? "right" : "left",
-              margin: "8px 0",
+              display: "flex",
+              justifyContent:
+                msg.role === "user" ? "flex-end" : "flex-start",
+              marginBottom: 8,
             }}
           >
-            <span
+            <div
               style={{
-                background: m.role === "user" ? "#0078ff" : "#e0e0e0",
-                color: m.role === "user" ? "#fff" : "#000",
+                maxWidth: "80%",
                 padding: "8px 12px",
                 borderRadius: 12,
-                display: "inline-block",
+                backgroundColor:
+                  msg.role === "user" ? "#1976d2" : "#e0e0e0",
+                color: msg.role === "user" ? "#fff" : "#000",
+                whiteSpace: "pre-wrap",
               }}
             >
-              {m.content}
-            </span>
+              {msg.content}
+            </div>
           </div>
         ))}
+        {loading && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: 4,
+            }}
+          >
+            <div
+              style={{
+                padding: "6px 10px",
+                borderRadius: 12,
+                backgroundColor: "#e0e0e0",
+                fontSize: 12,
+              }}
+            >
+              MindCare está digitando...
+            </div>
+          </div>
+        )}
       </div>
 
       <form
-        onSubmit={onSend}
-        style={{ display: "flex", marginTop: 12, gap: 8 }}
+        onSubmit={handleSend}
+        style={{ display: "flex", gap: 8, marginTop: 4 }}
       >
         <input
+          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Digite sua mensagem..."
-          style={{ flex: 1, padding: 8 }}
+          placeholder="Digite como você está se sentindo..."
+          style={{
+            flex: 1,
+            padding: "8px 10px",
+            borderRadius: 8,
+            border: "1px solid #ccc",
+          }}
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "..." : "Enviar"}
+        <button
+          type="submit"
+          disabled={loading || !input.trim()}
+          style={{
+            padding: "8px 16px",
+            borderRadius: 8,
+            border: "none",
+            backgroundColor: "#1976d2",
+            color: "#fff",
+            cursor: loading ? "default" : "pointer",
+          }}
+        >
+          Enviar
         </button>
       </form>
-
-      {error && (
-        <p style={{ color: "red", marginTop: 8 }}>
-          {error}
-        </p>
-      )}
     </div>
   );
-}
+};
+
+export default IA;
