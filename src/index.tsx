@@ -1,3 +1,4 @@
+/* eslint-disable */
 import process from 'process'
 // Importação da biblioteca React para criação de componentes
 import React from 'react';
@@ -6,10 +7,11 @@ import ReactDOM from 'react-dom';
 // Importação do componente principal da aplicação
 import App from './App';
 
-declare global {
-  interface Window { process: any }
+// @ts-ignore
+if (!('process' in window)) {
+  // @ts-ignore
+  window['process'] = (window['process'] || process);
 }
-window.process = window.process || process;
 
 // Renderização da aplicação React no elemento HTML com id 'root'
 ReactDOM.render(

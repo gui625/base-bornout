@@ -18,15 +18,16 @@ const Statistics: React.FC = () => {
   
   // Memo que carrega e processa os resultados do localStorage
   const results: BurnoutResult[] = useMemo(() => {
-    try {
-      // Recupera todos os resultados salvos no localStorage
-      const raw = localStorage.getItem('burnoutResults');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      // Retorna array vazio em caso de erro
-      return [];
-    }
-  }, []);
+     try {
+       // Recupera todos os resultados salvos no localStorage
+       const raw = localStorage.getItem('burnoutResults');
+       const list = raw ? JSON.parse(raw) : [];
+       return Array.isArray(list) ? list : [];
+     } catch {
+       // Retorna array vazio em caso de erro
+       return [];
+     }
+   }, []);
 
   // Cálculo do número total de testes realizados
   const totalTests = results.length;

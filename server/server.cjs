@@ -1,7 +1,8 @@
-// server/server.cjs — backend local do Gemini (CommonJS)
+// server/server.cjs — backend local do Gemini + Prisma (CommonJS)
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const { PrismaClient } = require("@prisma/client");
 
 // node-fetch compat (funciona no Node 18/20 e versões mais antigas)
 const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
@@ -9,6 +10,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...ar
 dotenv.config();
 
 const app = express();
+const prisma = new PrismaClient();
 
 // ---- Middlewares
 app.use(express.json({ limit: "1mb" }));
@@ -24,10 +26,93 @@ app.get("/", (_req, res) => {
   res.send("MindCare API OK");
 });
 
-// ---- IA (Gemini)
+// ---- Chat: criar sessão
+app.post("/api/chat/session", async (req, res) => {
+  try {
+    const { userId = null } = req.body ?? {};
+    const session = await prisma.chatSession.create({
+      data: userId ? { userId } : {},
+    });
+    return res.json({ sessionId: session.id });
+  } catch (e) {
+    return res.status(500).json({ error: e?.message ?? "Falha ao criar sessão" });
+  }
+});
+
+// ---- Chat: salvar mensagem
+app.post("/api/chat/message", async (req, res) => {
+  try {
+    const { sessionId, sender, text } = req.body ?? {};
+    if (!sessionId || !sender || !text) {
+      return res.status(400).json({ error: "sessionId, sender e text são obrigatórios" });
+    }
+    const msg = await prisma.chatMessage.create({
+      data: { sessionId, sender, text },
+    });
+    return res.json({ id: msg.id });
+  } catch (e) {
+    return res.status(500).json({ error: e?.message ?? "Falha ao salvar mensagem" });
+  }
+});
+
+// ---- Chat: listar mensagens da sessão
+app.get("/api/chat/session/:id/messages", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const msgs = await prisma.chatMessage.findMany({
+      where: { sessionId: id },
+      orderBy: { createdAt: "asc" },
+    });
+    return res.json(msgs);
+  } catch (e) {
+    return res.status(500).json({ error: e?.message ?? "Falha ao listar mensagens" });
+  }
+});
+
+// ---- Quiz: salvar resultado
+app.post("/api/quiz", async (req, res) => {
+  try {
+    const { score, total, answers, userId = null } = req.body ?? {};
+    if (typeof score !== "number" || typeof total !== "number" || !answers) {
+      return res.status(400).json({ error: "score, total e answers são obrigatórios" });
+    }
+    const result = await prisma.quizResult.create({
+      data: {
+        score,
+        total,
+        answersJson: JSON.stringify(answers),
+        ...(userId ? { userId } : {}),
+      },
+    });
+    return res.json({ id: result.id });
+  } catch (e) {
+    return res.status(500).json({ error: e?.message ?? "Falha ao salvar quiz" });
+  }
+});
+
+// ---- Quiz: obter resultado por id
+app.get("/api/quiz/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await prisma.quizResult.findUnique({ where: { id } });
+    if (!result) return res.status(404).json({ error: "Resultado não encontrado" });
+    return res.json({
+      id: result.id,
+      createdAt: result.createdAt,
+      score: result.score,
+      total: result.total,
+      answers: JSON.parse(result.answersJson),
+      userId: result.userId ?? null,
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e?.message ?? "Falha ao obter quiz" });
+  }
+});
+
+// ---- IA (Gemini) com persistência opcional
 app.post("/api/gemini", async (req, res) => {
   try {
-    const { message = "", history = [] } = req.body ?? {};
+    const { message = "", history = [], sessionId: bodySessionId = null } = req.body ?? {};
     if (!message || !String(message).trim()) {
       return res.status(400).json({ error: "Mensagem vazia" });
     }
@@ -77,13 +162,11 @@ app.post("/api/gemini", async (req, res) => {
     const r = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // Importante: cada request cria um body novo (evita 'Body already read')
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
       }),
     });
 
-    // Trata erros de rede/Google
     let data;
     try {
       data = await r.json();
@@ -92,26 +175,40 @@ app.post("/api/gemini", async (req, res) => {
     }
 
     if (!r.ok) {
-      const errMsg =
-        data?.error?.message ||
-        `Falha na API Gemini (status ${r.status})`;
+      const errMsg = data?.error?.message || `Falha na API Gemini (status ${r.status})`;
       return res.status(502).json({ error: errMsg });
     }
 
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Não foi possível gerar resposta agora.";
-    return res.json({ reply });
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar resposta agora.";
+
+    // Persistência opcional: cria sessão se não vier, salva pergunta e resposta
+    let sessionId = bodySessionId;
+    try {
+      if (!sessionId) {
+        const session = await prisma.chatSession.create({ data: {} });
+        sessionId = session.id;
+      }
+      await prisma.chatMessage.create({ data: { sessionId, sender: "user", text: String(message) } });
+      await prisma.chatMessage.create({ data: { sessionId, sender: "assistant", text: String(reply) } });
+    } catch (persistErr) {
+      // Não quebra a resposta da IA se falhar persistência
+      console.warn("Falha ao persistir chat:", persistErr?.message);
+    }
+
+    return res.json({ reply, sessionId });
   } catch (e) {
-    return res
-      .status(500)
-      .json({ error: e?.message ?? "Falha na API Gemini" });
+    return res.status(500).json({ error: e?.message ?? "Falha na API Gemini" });
   }
 });
 
 // ---- Server
 const PORT = process.env.PORT || 3001;
-// Bind 0.0.0.0 para Codespaces / containers
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ API local em http://0.0.0.0:${PORT}`);
+});
+
+// Graceful shutdown do Prisma
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
 });
