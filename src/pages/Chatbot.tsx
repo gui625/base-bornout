@@ -33,6 +33,7 @@ const Chatbot: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [sessionId, setSessionId] = useState<number | null>(null);
   
   const handleFinishChat = () => {
     history.push('/final');
@@ -61,6 +62,19 @@ const Chatbot: React.FC = () => {
   const sendMessageToAI = async (userMessage: string) => {
     setIsLoading(true);
     try {
+      // Garante sessão no backend
+      if (!sessionId) {
+        try {
+          const s = await fetch('/api/chat/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+          });
+          const sData = await s.json();
+          if (sData?.sessionId) setSessionId(Number(sData.sessionId));
+        } catch {}
+      }
+
       const history = messages.slice().map((m) => ({
         role: m.sender === 'user' ? 'user' : 'assistant',
         content: m.text,
@@ -69,7 +83,7 @@ const Chatbot: React.FC = () => {
       const r = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage, history }),
+        body: JSON.stringify({ message: userMessage, history, sessionId }),
       });
 
       let data: any = null;
@@ -87,6 +101,18 @@ const Chatbot: React.FC = () => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, newBotMessage]);
+
+      // Tenta salvar a resposta no backend
+      try {
+        const sid = data?.sessionId ?? sessionId;
+        if (sid) {
+          await fetch('/api/chat/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId: sid, sender: 'assistant', text: botText })
+          });
+        }
+      } catch {}
     } catch (e) {
       const newBotMessage: Message = {
         id: messages.length + 2,
@@ -101,16 +127,29 @@ const Chatbot: React.FC = () => {
   };
   const handleSendMessage = () => {
     if (inputText.trim() === '') return;
-    
+    const text = inputText;
+
     const newUserMessage: Message = {
       id: messages.length + 1,
-      text: inputText,
+      text,
       sender: 'user',
       timestamp: new Date()
     };
-    
+
     setMessages(prevMessages => [...prevMessages, newUserMessage]);
-    sendMessageToAI(inputText);
+
+    // Tenta salvar a pergunta do usuário no backend
+    try {
+      if (sessionId) {
+        fetch('/api/chat/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, sender: 'user', text })
+        }).catch(() => {});
+      }
+    } catch {}
+
+    sendMessageToAI(text);
     setInputText('');
   };
 

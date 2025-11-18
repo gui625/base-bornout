@@ -78,6 +78,19 @@ const BurnoutQuiz: React.FC = () => {
       positive: isPositive(answers[idx]),
     }));
 
+    // Persistir no backend (opcional, sem bloquear navegação)
+    try {
+      fetch('/api/quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          score,
+          total: allQuestions.length,
+          answers: detailedAnswers,
+        })
+      }).catch(() => {});
+    } catch {}
+
     history.push('/results', {
       score,
       answers: detailedAnswers,
