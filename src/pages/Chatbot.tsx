@@ -2,6 +2,24 @@ import React from "react";
 import IA from "../components/IA";
 import { useHistory } from "react-router-dom";
 
+interface Message {
+  id: number;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
+}
+
+// Interface para o contexto da conversa
+interface ConversationContext {
+  lastTopic: string;
+  mentionedSymptoms: boolean;
+  mentionedTreatment: boolean;
+  mentionedPrevention: boolean;
+  userGreeted: boolean;
+  userName: string | null;
+}
+
+// Componente principal do chatbot - assistente virtual para questões sobre burnout
 const Chatbot: React.FC = () => {
   const history = useHistory();
 

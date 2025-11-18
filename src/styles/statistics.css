@@ -1,4 +1,11 @@
-/* Estatísticas com visual claro, cards e mesa responsiva */
+/* ========================================
+   ESTILOS DA PÁGINA DE ESTATÍSTICAS
+   ========================================
+   Estatísticas com visual claro, cards e mesa responsiva
+   Layout para dashboard administrativo
+*/
+
+/* Container principal das estatísticas */
 .stats-container {
   max-width: 1100px;
   margin: 40px auto;
@@ -8,6 +15,7 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Barra superior com título e botão de logout */
 .stats-topbar {
   display: flex;
   align-items: center;
@@ -15,6 +23,7 @@
   margin-bottom: 22px;
 }
 
+/* Botão de logout - vermelho para ação destrutiva */
 .logout-button {
   background: #e74c3c;
   color: #fff;
@@ -25,8 +34,13 @@
   font-weight: 600;
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
-.logout-button:hover { background: #c0392b; box-shadow: 0 8px 20px rgba(231,76,60,0.24); }
 
+.logout-button:hover { 
+  background: #c0392b; 
+  box-shadow: 0 8px 20px rgba(231,76,60,0.24); 
+}
+
+/* Grid de cards para métricas principais */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -34,6 +48,7 @@
   margin-bottom: 22px;
 }
 
+/* Card individual para cada métrica */
 .card {
   background: #f8fafc;
   border: 1px solid var(--border-soft);
@@ -42,20 +57,41 @@
   text-align: center;
 }
 
-.big { font-size: 28px; font-weight: 700; margin-top: 6px; }
-.big.danger { color: #e74c3c; }
-.big.warning { color: #f1c40f; }
-.big.safe { color: #2ecc71; }
+/* Números grandes para métricas - com cores por severidade */
+.big { 
+  font-size: 28px; 
+  font-weight: 700; 
+  margin-top: 6px; 
+}
 
-.table-wrapper { overflow-x: auto; }
-.table-wrapper table { width: 100%; border-collapse: collapse; }
+.big.danger { color: #e74c3c; }   /* Vermelho para alto risco */
+.big.warning { color: #f1c40f; }  /* Amarelo para risco médio */
+.big.safe { color: #2ecc71; }     /* Verde para baixo risco */
+
+/* Wrapper da tabela com scroll horizontal */
+.table-wrapper { 
+  overflow-x: auto; 
+}
+
+.table-wrapper table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+/* Células da tabela */
 .table-wrapper th, .table-wrapper td {
   padding: 12px 10px;
   border: 1px solid var(--border-soft);
   text-align: left;
 }
-.table-wrapper thead th { background: #f3f5f9; color: var(--text-strong); }
 
+/* Cabeçalho da tabela */
+.table-wrapper thead th { 
+  background: #f3f5f9; 
+  color: var(--text-strong); 
+}
+
+/* Mensagem quando não há dados */
 .no-data {
   background: #f8f8f8;
   border: 1px dashed #ddd;
