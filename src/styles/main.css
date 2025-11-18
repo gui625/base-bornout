@@ -1,134 +1,249 @@
-/* Design system inspirado em bma.org.uk e greator.com */
+/* ========================================
+   SISTEMA DE DESIGN PRINCIPAL
+   ========================================
+   Design system inspirado em bma.org.uk e greator.com
+   Define as variáveis CSS customizadas (CSS Custom Properties) 
+   que são utilizadas em toda a aplicação para manter consistência visual
+*/
+
+/* Variáveis CSS - Design Tokens */
 :root {
-  --brand-primary: #2563c9;
-  --brand-primary-600: #1f54aa;
-  --brand-gradient-start: #2b6df3;
-  --brand-gradient-end: #3a7bd5;
-  --bg-soft: #f5f7fb;
-  --bg-card: #ffffff;
-  --text-strong: #1f2937;
-  --text-muted: #667085;
-  --border-soft: #e5e9f2;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 10px 24px rgba(0,0,0,0.08);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --spacing-1: 6px;
-  --spacing-2: 10px;
-  --spacing-3: 14px;
-  --spacing-4: 20px;
-  --spacing-5: 28px;
+  /* Cores primárias da marca - tons de azul */
+  --brand-primary: #2563c9;        /* Azul principal usado em botões e elementos de destaque */
+  --brand-primary-600: #1f54aa;    /* Variação mais escura para hover states */
+  
+  /* Gradientes da marca - usados no header e elementos especiais */
+  --brand-gradient-start: #2b6df3;  /* Início do gradiente azul */
+  --brand-gradient-end: #3a7bd5;    /* Fim do gradiente azul */
+  
+  /* Cores de fundo - sistema de camadas */
+  --bg-soft: #f5f7fb;              /* Fundo suave para a página principal */
+  --bg-card: #ffffff;              /* Fundo branco para cards e containers */
+  
+  /* Cores de texto - hierarquia tipográfica */
+  --text-strong: #1f2937;          /* Texto principal - títulos e conteúdo importante */
+  --text-muted: #667085;           /* Texto secundário - descrições e labels */
+  
+  /* Bordas e divisores */
+  --border-soft: #e5e9f2;          /* Bordas suaves para inputs e divisores */
+  
+  /* Sombras - sistema de elevação */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);   /* Sombra pequena para elementos sutis */
+  --shadow-md: 0 10px 24px rgba(0,0,0,0.08); /* Sombra média para cards principais */
+  
+  /* Border radius - sistema de arredondamento */
+  --radius-sm: 8px;               /* Raio pequeno para botões e inputs */
+  --radius-md: 12px;              /* Raio médio para cards */
+  --radius-lg: 18px;              /* Raio grande para containers especiais */
+  
+  /* Espaçamento - sistema de spacing consistente */
+  --spacing-1: 6px;               /* Espaçamento extra pequeno */
+  --spacing-2: 10px;              /* Espaçamento pequeno */
+  --spacing-3: 14px;              /* Espaçamento médio pequeno */
+  --spacing-4: 20px;              /* Espaçamento médio */
+  --spacing-5: 28px;              /* Espaçamento grande */
 }
 
-/* Base */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+/* ========================================
+   RESET E ESTILOS BASE
+   ======================================== */
+
+/* Reset básico - garante box-sizing consistente */
+* { 
+  box-sizing: border-box; 
+}
+
+/* Altura total para html e body - permite layouts full-height */
+html, body { 
+  height: 100%; 
+}
+
+/* Estilos base do body - tipografia e fundo */
 body {
   margin: 0;
+  /* Stack de fontes moderno com fallbacks */
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* Gradiente sutil de fundo para toda a aplicação */
   background: linear-gradient(180deg, #f7f9fc 0%, var(--bg-soft) 100%);
   color: var(--text-strong);
 }
 
-/* Header */
+/* ========================================
+   COMPONENTE HEADER
+   ======================================== */
+
+/* Header fixo no topo com gradiente da marca */
 .header {
-  position: sticky;
+  position: sticky;           /* Mantém o header visível durante scroll */
   top: 0;
-  z-index: 10;
+  z-index: 10;               /* Garante que fique acima de outros elementos */
   background: linear-gradient(90deg, var(--brand-gradient-start), var(--brand-gradient-end));
   padding: 14px 24px;
   color: #fff;
   box-shadow: var(--shadow-sm);
 }
+
+/* Logo/título no header */
 .logo {
   color: #fff;
   text-decoration: none;
   font-weight: 700;
   font-size: 1.25rem;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.2px;      /* Espaçamento entre letras para melhor legibilidade */
 }
 
-/* Containers */
+/* ========================================
+   CONTAINERS E LAYOUT
+   ======================================== */
+
+/* Container principal - centraliza conteúdo com largura máxima */
 .container {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: 1100px;          /* Largura máxima para telas grandes */
+  margin: 0 auto;             /* Centraliza horizontalmente */
   padding: 0 var(--spacing-4);
 }
 
+/* Container específico para o questionário */
 .quiz-container {
   background: var(--bg-card);
   padding: var(--spacing-5);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md);  /* Sombra mais pronunciada para destaque */
 }
 
+/* Container para página de resultados */
 .results-container {
   margin-top: var(--spacing-4);
   padding: var(--spacing-5);
   background: var(--bg-card);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm);   /* Sombra mais sutil */
 }
 
+/* Container de introdução - usado na página inicial */
 .intro {
   background: var(--bg-card);
   padding: var(--spacing-5);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-lg);  /* Raio maior para destaque */
   box-shadow: var(--shadow-md);
   text-align: center;
 }
 
-/* Tipografia */
-h1, h2, h3 { color: var(--text-strong); margin: 0 0 var(--spacing-3); }
-p { color: var(--text-muted); line-height: 1.6; }
+/* ========================================
+   TIPOGRAFIA
+   ======================================== */
 
-/* Botões */
+/* Títulos - hierarquia visual clara */
+h1, h2, h3 { 
+  color: var(--text-strong); 
+  margin: 0 0 var(--spacing-3); 
+}
+
+/* Parágrafos - texto secundário com boa legibilidade */
+p { 
+  color: var(--text-muted); 
+  line-height: 1.6;           /* Altura da linha para melhor leitura */
+}
+
+/* ========================================
+   SISTEMA DE BOTÕES
+   ======================================== */
+
+/* Estilos base para botões - design consistente */
 .button,
 .start-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 8px;                   /* Espaço entre ícone e texto */
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
-  background: #9aa0a6; /* neutro padrão */
+  background: #9aa0a6;        /* Cor neutra padrão */
   padding: 12px 18px;
   border: none;
   border-radius: var(--radius-sm);
   transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
+
+/* Estados de hover - feedback visual */
 .button:hover,
-.start-btn:hover { background: #8b9097; }
+.start-btn:hover { 
+  background: #8b9097; 
+}
+
+/* Estados selecionado e clicado - cor da marca */
 .button.clicked,
 .button.selected,
-.start-btn { background: var(--brand-primary); }
-.button.clicked { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,201,0.24); }
+.start-btn { 
+  background: var(--brand-primary); 
+}
 
-/* Estado selecionado */
+/* Efeito de elevação ao clicar */
+.button.clicked { 
+  transform: translateY(-1px); 
+  box-shadow: 0 4px 14px rgba(37,99,201,0.24); 
+}
+
+/* ========================================
+   ESTADOS ESPECÍFICOS DE BOTÕES
+   ======================================== */
+
+/* Botões de resposta "Sim" - mantém cor da marca quando selecionado */
 .button.selected,
-.button.clicked { background: var(--brand-primary); }
+.button.clicked { 
+  background: var(--brand-primary); 
+}
+
 .button.sim-btn.selected,
-.button.sim-btn.clicked { background: var(--brand-primary); }
-.button.nao-btn { background: #9aa0a6; }
+.button.sim-btn.clicked { 
+  background: var(--brand-primary); 
+}
+
+/* Botões de resposta "Não" - cor neutra por padrão */
+.button.nao-btn { 
+  background: #9aa0a6; 
+}
+
 .button.nao-btn.selected,
-.button.nao-btn.clicked { background: var(--brand-primary); }
+.button.nao-btn.clicked { 
+  background: var(--brand-primary); 
+}
 
-/* Cards e destaques */
-.recommendation { font-weight: 700; color: #c0392b; }
+/* ========================================
+   COMPONENTES ESPECIAIS
+   ======================================== */
 
-/* Página inicial */
+/* Texto de recomendação - destaque em vermelho para alertas */
+.recommendation { 
+  font-weight: 700; 
+  color: #c0392b; 
+}
+
+/* ========================================
+   LAYOUTS ESPECÍFICOS DE PÁGINAS
+   ======================================== */
+
+/* Container da página inicial - centralização vertical e horizontal */
 .home-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 70vh;
+  min-height: 70vh;          /* 70% da altura da viewport */
 }
 
-/* Formulários genéricos */
-.form-group label { color: var(--text-strong); font-weight: 600; }
+/* ========================================
+   FORMULÁRIOS
+   ======================================== */
+
+/* Labels de formulário - tipografia consistente */
+.form-group label { 
+  color: var(--text-strong); 
+  font-weight: 600; 
+}
+
+/* Inputs de formulário - design moderno com foco */
 .form-group input {
   width: 100%;
   padding: 10px 12px;
@@ -138,12 +253,18 @@ p { color: var(--text-muted); line-height: 1.6; }
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Estado de foco dos inputs - feedback visual claro */
 .form-group input:focus {
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(37,99,201,0.15);
+  box-shadow: 0 0 0 3px rgba(37,99,201,0.15);  /* Anel de foco azul translúcido */
 }
 
-/* Utilidades */
+/* ========================================
+   CLASSES UTILITÁRIAS
+   ======================================== */
+
+/* Utilitários de margem superior - espaçamento consistente */
 .mt-2 { margin-top: var(--spacing-2); }
 .mt-3 { margin-top: var(--spacing-3); }
 .mt-4 { margin-top: var(--spacing-4); }

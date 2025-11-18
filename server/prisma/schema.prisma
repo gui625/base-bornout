@@ -1,0 +1,56 @@
+// Prisma schema for MindCare backend
+// Using SQLite for fast local development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  name      String?
+  email     String?   @unique
+
+  sessions  ChatSession[]
+  quiz      QuizResult[]
+}
+
+model ChatSession {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  userId     Int?
+  user       User?        @relation(fields: [userId], references: [id])
+
+  messages   ChatMessage[]
+}
+
+model ChatMessage {
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  sessionId  Int
+  session    ChatSession @relation(fields: [sessionId], references: [id])
+
+  sender     MessageSender
+  text       String
+}
+
+enum MessageSender {
+  user
+  assistant
+}
+
+model QuizResult {
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id])
+
+  score        Int
+  total        Int
+  answersJson  String    // JSON string with detailed answers
+}

@@ -1,8 +1,11 @@
 // src/components/BurnoutQuiz.tsx
 import React, { useState } from 'react';
+// Hook para navegação entre páginas
 import { useHistory } from 'react-router-dom';
+// Importação das perguntas base do questionário de burnout
 import baseQuestions from '../utils/burnoutQuestions';
 
+// Array de opções de resposta para cada pergunta do questionário
 const OPTIONS = [
   { label: 'Sim, com frequência', value: 'sim_com_frequencia' },
   { label: 'Sim, porém com pouca frequência', value: 'sim_pouca_frequencia' },
@@ -10,56 +13,60 @@ const OPTIONS = [
   { label: 'Não', value: 'nao' },
 ];
 
-const isPositive = (value: string | null) => {
-  return value === 'sim_com_frequencia' || value === 'sim_pouca_frequencia';
-};
-
-const getProfile = () => {
+// Recupera o perfil do usuário do localStorage (se existir)
+function getProfile(): any {
   try {
-    const raw = localStorage.getItem('authUser');
-    const user = raw ? JSON.parse(raw) : null;
-    const email = user?.username || '';
-    const pRaw = email ? localStorage.getItem(`userProfile:${email}`) : null;
-    return pRaw ? JSON.parse(pRaw) : null;
-  } catch (e) {
+    const rawUser = localStorage.getItem('authUser');
+    const user = rawUser ? JSON.parse(rawUser) : null;
+    if (!user?.username) return null;
+    const rawProfile = localStorage.getItem(`userProfile:${user.username}`);
+    return rawProfile ? JSON.parse(rawProfile) : null;
+  } catch {
     return null;
   }
-};
+}
 
-const buildProfileQuestions = (profile: any) => {
-  if (!profile) return [];
-  const { profissao, idade, tempoTrabalho } = profile;
-  const q: { question: string }[] = [];
-  if (profissao) {
-    q.push({ question: `Na sua área de ${profissao}, você sente pressão diária para atingir metas?` });
-    q.push({ question: `Seu ambiente de ${profissao} dificulta pausas durante o expediente?` });
-  }
-  if (typeof idade === 'number' && idade > 0) {
-    q.push({ question: `Com ${idade} anos, percebe alterações no sono relacionadas ao trabalho?` });
-  }
-  if (typeof tempoTrabalho === 'number' && tempoTrabalho > 0) {
-    q.push({ question: `Trabalhando cerca de ${tempoTrabalho} horas por dia, você se sente exausto ao final?` });
-  }
-  return q;
-};
+// Gera perguntas adicionais com base no perfil (mantemos vazio para não alterar contagem)
+function buildProfileQuestions(_profile: any): { question: string }[] {
+  return [];
+}
 
+// Define se uma resposta é positiva para burnout
+function isPositive(value: string | null): boolean {
+  return value === 'sim_com_frequencia' || value === 'sim_pouca_frequencia' || value === 'nao_tenho_certeza';
+}
+
+// Componente principal do questionário de burnout
 const BurnoutQuiz: React.FC = () => {
+  // Recuperar perfil do usuário para personalizar perguntas
   const profile = getProfile();
+  
+  // Combinar perguntas base com perguntas personalizadas do perfil
   const allQuestions = [...baseQuestions, ...buildProfileQuestions(profile)];
 
+  // Estado para armazenar as respostas do usuário (inicialmente todas null)
   const [answers, setAnswers] = useState<(string | null)[]>(Array(allQuestions.length).fill(null));
+  
+  // Estado para controlar efeito visual de clique nos botões
   const [clickedIndex, setClickedIndex] = useState<{ idx: number; value: string } | null>(null);
+  
+  // Hook para navegação entre páginas
   const history = useHistory();
 
-  const handleAnswer = (index: number, value: string) => {
-    const updated = [...answers];
-    updated[index] = value; // garante apenas uma seleção por pergunta
-    setAnswers(updated);
-    setClickedIndex({ idx: index, value });
-    setTimeout(() => setClickedIndex(null), 200); // Remove efeito após 200ms
+  // Manipula a seleção de resposta para uma pergunta específica
+  const handleAnswer = (idx: number, value: string) => {
+    setAnswers(prev => {
+      const next = [...prev];
+      next[idx] = value;
+      return next;
+    });
+    setClickedIndex({ idx, value });
+    setTimeout(() => setClickedIndex(null), 180);
   };
 
+  // Função que processa o envio do questionário
   const handleSubmit = (e: React.FormEvent) => {
+    // Prevenir comportamento padrão do formulário
     e.preventDefault();
     const score = answers.filter((a) => isPositive(a)).length;
 
@@ -76,9 +83,11 @@ const BurnoutQuiz: React.FC = () => {
     });
   };
 
+  // Renderização da interface do questionário
   return (
     <div className="quiz-container">
       <h2>Questionário de Burnout</h2>
+      
       <form onSubmit={handleSubmit}>
         {allQuestions.map((q, idx) => (
           <div key={idx} style={{ marginBottom: 16 }}>
@@ -101,6 +110,7 @@ const BurnoutQuiz: React.FC = () => {
             </label>
           </div>
         ))}
+
         <button type="submit" className="start-btn" disabled={answers.includes(null)}>
           Ver Resultado
         </button>

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import "../styles/statistics.css";
 import { API_BASE } from "../services/api";
 
+// Interface que define a estrutura de um resultado de burnout
 interface BurnoutResult {
   id: number;
   name: string | null;
@@ -12,7 +13,9 @@ interface BurnoutResult {
   created_at: string;
 }
 
+// Componente da página de estatísticas - exclusiva para administradores
 const Statistics: React.FC = () => {
+  // Hook para navegação entre páginas
   const history = useHistory();
 
   const [results, setResults] = useState<BurnoutResult[]>([]);
@@ -40,6 +43,7 @@ const Statistics: React.FC = () => {
     fetchResults();
   }, []);
 
+  // Cálculo do número total de testes realizados
   const totalTests = results.length;
 
   const avgScore = useMemo(() => {
@@ -53,12 +57,14 @@ const Statistics: React.FC = () => {
   const alertCount = results.filter((r) => r.level === "moderado").length;
   const healthyCount = results.filter((r) => r.level === "baixo").length;
 
+  // Função que realiza logout do administrador
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("authUser");
     history.push("/login");
   };
 
+  // Renderização da interface do usuário
   return (
     <div className="stats-container">
       <div className="stats-topbar">
