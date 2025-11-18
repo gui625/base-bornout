@@ -8,6 +8,13 @@ import '../styles/results.css';
 interface LocationState {
   // Pontuação total do questionário de burnout
   score: number;
+  // Respostas detalhadas do questionário (opcional, compatível com IAchatbot)
+  answers?: {
+    index: number;
+    question: string;
+    answer: string | null;
+    positive: boolean;
+  }[];
 }
 
 // Componente da página de resultados - mostra o resultado do questionário
