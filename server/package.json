@@ -9,6 +9,7 @@
     "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
+    "better-sqlite3": "^9.6.0",
     "@prisma/client": "^6.19.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",

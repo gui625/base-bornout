@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Role = "user" | "assistant";
 
@@ -12,22 +12,32 @@ const IA: React.FC = () => {
     {
       role: "assistant",
       content:
-        "Olá! Eu sou a MindCare, sua assistente para prevenção de burnout. Como você está se sentindo hoje?",
+        "Olá! Eu sou o Nout, sua assistente para prevenção de burnout. Como você está se sentindo hoje?",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // rola automaticamente pro fim sempre que o chat mudar
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const text = input.trim();
     if (!text || loading) return;
 
-    // adiciona mensagem do usuário na tela
+    setErrorMsg(null);
+
     const nextMessages: Message[] = [
       ...messages,
       { role: "user", content: text },
     ];
+
     setMessages(nextMessages);
     setInput("");
     setLoading(true);
@@ -44,6 +54,22 @@ const IA: React.FC = () => {
 
       const data = await resp.json();
 
+      if (!resp.ok || data?.error) {
+        const msg =
+          data?.error ||
+          "Não consegui falar com a Nout agora. Tente novamente em alguns instantes.";
+        setErrorMsg(msg);
+        setMessages([
+          ...nextMessages,
+          {
+            role: "assistant",
+            content:
+              "Tive um probleminha ao responder agora, mas você pode tentar novamente em alguns instantes.",
+          },
+        ]);
+        return;
+      }
+
       const reply: string =
         data?.reply ||
         "Desculpe, não consegui responder agora. Tente novamente em instantes.";
@@ -54,6 +80,9 @@ const IA: React.FC = () => {
       ]);
     } catch (err) {
       console.error(err);
+      setErrorMsg(
+        "Erro de conexão com o servidor. Verifique sua internet ou tente mais tarde."
+      );
       setMessages([
         ...nextMessages,
         {
@@ -68,98 +97,191 @@ const IA: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px" }}>
-      <h2 style={{ marginBottom: 16 }}>Assistente MindCare</h2>
-
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background:
+          "linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 40%, #ffffff 100%)",
+        padding: "16px",
+      }}
+    >
       <div
         style={{
-          border: "1px solid #ddd",
-          borderRadius: 8,
-          padding: 12,
-          height: "60vh",
-          overflowY: "auto",
-          marginBottom: 12,
-          backgroundColor: "#fafafa",
+          width: "100%",
+          maxWidth: 900,
+          backgroundColor: "#ffffff",
+          borderRadius: 16,
+          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
         }}
       >
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              justifyContent:
-                msg.role === "user" ? "flex-end" : "flex-start",
-              marginBottom: 8,
-            }}
-          >
-            <div
-              style={{
-                maxWidth: "80%",
-                padding: "8px 12px",
-                borderRadius: 12,
-                backgroundColor:
-                  msg.role === "user" ? "#1976d2" : "#e0e0e0",
-                color: msg.role === "user" ? "#fff" : "#000",
-                whiteSpace: "pre-wrap",
-              }}
-            >
-              {msg.content}
-            </div>
-          </div>
-        ))}
-        {loading && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              marginTop: 4,
-            }}
-          >
-            <div
-              style={{
-                padding: "6px 10px",
-                borderRadius: 12,
-                backgroundColor: "#e0e0e0",
-                fontSize: 12,
-              }}
-            >
-              MindCare está digitando...
-            </div>
-          </div>
-        )}
-      </div>
-
-      <form
-        onSubmit={handleSend}
-        style={{ display: "flex", gap: 8, marginTop: 4 }}
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Digite como você está se sentindo..."
+        {/* Header */}
+        <header
           style={{
-            flex: 1,
-            padding: "8px 10px",
-            borderRadius: 8,
-            border: "1px solid #ccc",
-          }}
-        />
-        <button
-          type="submit"
-          disabled={loading || !input.trim()}
-          style={{
-            padding: "8px 16px",
-            borderRadius: 8,
-            border: "none",
-            backgroundColor: "#1976d2",
-            color: "#fff",
-            cursor: loading ? "default" : "pointer",
+            padding: "16px 20px",
+            borderBottom: "1px solid #eee",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
           }}
         >
-          Enviar
-        </button>
-      </form>
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle at 30% 30%, #79e4ffff, #007194ff)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: 20,
+            }}
+          >
+            N
+          </div>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 18 }}>Nout IA</h2>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 12,
+                color: "#666",
+              }}
+            >
+              Assistente para prevenção de burnout
+            </p>
+          </div>
+        </header>
+
+        {/* Área de mensagens */}
+        <div
+          style={{
+            padding: "16px 20px",
+            flex: 1,
+            overflowY: "auto",
+            backgroundColor: "#fafafa",
+          }}
+        >
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                justifyContent:
+                  msg.role === "user" ? "flex-end" : "flex-start",
+                marginBottom: 8,
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: "75%",
+                  padding: "10px 14px",
+                  borderRadius: 16,
+                  backgroundColor:
+                    msg.role === "user" ? "#1976d2" : "#e0e0e0",
+                  color: msg.role === "user" ? "#fff" : "#000",
+                  whiteSpace: "pre-wrap",
+                  fontSize: 14,
+                  lineHeight: 1.4,
+                }}
+              >
+                {msg.content}
+              </div>
+            </div>
+          ))}
+
+          {loading && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                marginTop: 4,
+              }}
+            >
+              <div
+                style={{
+                  padding: "8px 12px",
+                  borderRadius: 16,
+                  backgroundColor: "#e0e0e0",
+                  fontSize: 12,
+                  color: "#555",
+                }}
+              >
+                Nout está digitando...
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Mensagem de erro */}
+        {errorMsg && (
+          <div
+            style={{
+              padding: "6px 20px",
+              backgroundColor: "#ffebee",
+              color: "#b71c1c",
+              fontSize: 12,
+              borderTop: "1px solid #ffcdd2",
+            }}
+          >
+            {errorMsg}
+          </div>
+        )}
+
+        {/* Input */}
+        <form
+          onSubmit={handleSend}
+          style={{
+            padding: "12px 16px",
+            borderTop: "1px solid #eee",
+            display: "flex",
+            gap: 8,
+            backgroundColor: "#fff",
+          }}
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Digite como você está se sentindo..."
+            style={{
+              flex: 1,
+              padding: "10px 12px",
+              borderRadius: 12,
+              border: "1px solid #ccc",
+              fontSize: 14,
+              outline: "none",
+            }}
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            disabled={loading || !input.trim()}
+            style={{
+              padding: "10px 18px",
+              borderRadius: 12,
+              border: "none",
+              backgroundColor: loading || !input.trim() ? "#90caf9" : "#1976d2",
+              color: "#fff",
+              cursor: loading || !input.trim() ? "default" : "pointer",
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            Enviar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

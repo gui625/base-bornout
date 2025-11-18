@@ -1,4 +1,4 @@
-// Importações necessárias do React para estado
+// src/components/BurnoutQuiz.tsx
 import React, { useState } from 'react';
 // Hook para navegação entre páginas
 import { useHistory } from 'react-router-dom';
@@ -68,7 +68,6 @@ const BurnoutQuiz: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     // Prevenir comportamento padrão do formulário
     e.preventDefault();
-
     const score = answers.filter((a) => isPositive(a)).length;
 
     const detailedAnswers = allQuestions.map((q, idx) => ({
@@ -77,19 +76,6 @@ const BurnoutQuiz: React.FC = () => {
       answer: answers[idx],
       positive: isPositive(answers[idx]),
     }));
-
-    // Persistir no backend (opcional, sem bloquear navegação)
-    try {
-      fetch('/api/quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          score,
-          total: allQuestions.length,
-          answers: detailedAnswers,
-        })
-      }).catch(() => {});
-    } catch {}
 
     history.push('/results', {
       score,
