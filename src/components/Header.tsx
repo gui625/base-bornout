@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Header: React.FC = () => (
   <header className="header">
     <nav>
-      <Link to="/" className="logo">Burnout Detector</Link>
+      <Link to="/" className="logo">MindCare</Link>
     </nav>
   </header>
 );
