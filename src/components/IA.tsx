@@ -23,7 +23,10 @@ const IA: React.FC = () => {
 
   // rola automaticamente pro fim sempre que o chat mudar
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   }, [messages, loading]);
 
   const handleSend = async (e: React.FormEvent) => {
@@ -99,19 +102,18 @@ const IA: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        // tiramos o minHeight: "100vh" e o gradiente
+        width: "100%",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
-        background:
-          "linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 40%, #ffffff 100%)",
-        padding: "16px",
+        backgroundColor: "transparent",
+        padding: "24px 0 16px",
       }}
     >
       <div
         style={{
           width: "100%",
-          maxWidth: 900,
+          maxWidth: 1000,            // card mais largo
           backgroundColor: "#ffffff",
           borderRadius: 16,
           boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
@@ -136,7 +138,7 @@ const IA: React.FC = () => {
               height: 40,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle at 30% 30%, #79e4ffff, #007194ff)",
+                "radial-gradient(circle at 30% 30%, #79e4ff, #007194)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -166,6 +168,9 @@ const IA: React.FC = () => {
           style={{
             padding: "16px 20px",
             flex: 1,
+            // dá uma altura mínima pro chat ficar mais "alto"
+            minHeight: 260,
+            maxHeight: "55vh",      // rolagem só aqui dentro
             overflowY: "auto",
             backgroundColor: "#fafafa",
           }}
@@ -271,7 +276,8 @@ const IA: React.FC = () => {
               padding: "10px 18px",
               borderRadius: 12,
               border: "none",
-              backgroundColor: loading || !input.trim() ? "#90caf9" : "#1976d2",
+              backgroundColor:
+                loading || !input.trim() ? "#90caf9" : "#1976d2",
               color: "#fff",
               cursor: loading || !input.trim() ? "default" : "pointer",
               fontSize: 14,
